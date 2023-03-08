@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>利用数组建链表 | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">利用数组建链表</span></h1>
+
+<h2 class="date">2018/04/19</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/c">C</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span><span style="color:#75715e">&lt;stdlib.h&gt;//这句写上，因为结点空间申请函数malloc()要用此 </span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> Node{<span style="color:#75715e">//链表结点定义
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">int</span> data;<span style="color:#75715e">//放数据信息 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">struct</span> Node <span style="color:#f92672">*</span>next;<span style="color:#75715e">//指向后继结点的指针 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}Node;
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>Node <span style="color:#f92672">*</span><span style="color:#a6e22e">head</span>(<span style="color:#66d9ef">int</span> a[]){<span style="color:#75715e">//此方法利用数组建链表（尾插法） ，并返回头指针L
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Node <span style="color:#f92672">*</span>L, <span style="color:#f92672">*</span>current,<span style="color:#f92672">*</span>p;<span style="color:#75715e">//L是头指针，current是当前结点指针，p是每次新申请结点的指针 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	L <span style="color:#f92672">=</span> (Node<span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(Node));<span style="color:#75715e">//先给头结点申请个空间 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	current <span style="color:#f92672">=</span> L;
+</span></span><span style="display:flex;"><span>	L<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span>(a[i]<span style="color:#f92672">!=</span><span style="color:#e6db74">&#39;\0&#39;</span>){<span style="color:#75715e">//只要没将数组元素读完，就继续循环 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		p <span style="color:#f92672">=</span> (Node<span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(Node));<span style="color:#75715e">//每次读一个数组中的数，都要申请一个节点空间 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		p<span style="color:#f92672">-&gt;</span>data <span style="color:#f92672">=</span> a[i];<span style="color:#75715e">//将读到的数组中的数字赋给刚申请结点的数据域 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		current<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> p;
+</span></span><span style="display:flex;"><span>		current <span style="color:#f92672">=</span> p;
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>i;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	current<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> L;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>){
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> x[<span style="color:#ae81ff">1024</span>]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">6</span>};<span style="color:#75715e">//随便建个数组 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	Node <span style="color:#f92672">*</span>L,<span style="color:#f92672">*</span>p;
+</span></span><span style="display:flex;"><span>	L <span style="color:#f92672">=</span> <span style="color:#a6e22e">head</span>(x);<span style="color:#75715e">//用数组中的元素建链表，并得到链表头指针 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	p <span style="color:#f92672">=</span> L<span style="color:#f92672">-&gt;</span>next;<span style="color:#75715e">//从开始结点的信息开始打印 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">while</span>(p<span style="color:#f92672">!=</span>NULL){<span style="color:#75715e">//验证一下打印出来的数是不是数组中的数 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,p<span style="color:#f92672">-&gt;</span>data);
+</span></span><span style="display:flex;"><span>		p <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>} 
+</span></span></code></pre></div><p>运行效果如下：</p>
+<p><img src="https://i.imgtg.com/2023/03/08/YHuIP.png" alt="YHuIP.png"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

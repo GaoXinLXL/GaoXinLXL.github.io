@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Classic</title>
+    <link>https://gaoxinlxl.github.io/post/</link>
+    <description>Recent content in Posts on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AbstractRoutingDataSource&#43;Mybatis拦截器实现动态切换数据源与切库</title>
+      <link>https://gaoxinlxl.github.io/post/2023/02/14/abstractroutingdatasource-mybatis%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E6%BA%90%E4%B8%8E%E5%88%87%E5%BA%93/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2023/02/14/abstractroutingdatasource-mybatis%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E6%BA%90%E4%B8%8E%E5%88%87%E5%BA%93/</guid>
+      <description>场景：线上4个MySQL实例分属4个机器，每个实例8个库。根据某一业务id，能够唯一确定数据存放在某个机器的某个库下。 要求：执行sql的时候，根据业务id切换数据源 工具：AbstractRoutingDataSource 切换数据源+Mybatis拦截器切换库
+1.数据源配置 yml配置文件参考如下：
+dlcms: dataSource: dlcms: url: jdbc:mysql://${MYSQL_URL_1}:${MYSQL_PORT}/dlcms?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;useSSL=false&amp;amp;allowLoadLocalInfile=true&amp;amp;serverTimezone=Asia/Shanghai driver-class-name: com.mysql.cj.jdbc.Driver username: ${DB_USER} password: ${DB_PASSWORD} dlcms_01: url: jdbc:mysql://${MYSQL_URL_2}:${MYSQL_PORT}/dlcms_01?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;useSSL=false&amp;amp;allowLoadLocalInfile=true&amp;amp;serverTimezone=Asia/Shanghai driver-class-name: com.mysql.cj.jdbc.Driver username: ${DB_USER} password: ${DB_PASSWORD} ...... MYSQL_URL_1、MYSQL_URL_2是不同的ip，表示MySQL分属不同机器。
+2.读取数据源配置 @Component @ConfigurationProperties(prefix = &amp;#34;dlcms&amp;#34;) public class DlcmsDataSourceProfile { private Map&amp;lt;String, DataSourceProperties&amp;gt; datasource; public Map&amp;lt;String, DataSourceProperties&amp;gt; getDatasource() { return datasource; } public void setDatasource(Map&amp;lt;String, DataSourceProperties&amp;gt; datasource) { this.datasource = datasource; } } SpringBoot启动时会加载配置，将以dlcms 开头的配置存放进 datasource 同名Map&amp;lt;String, DataSourceProperties&amp;gt;集合
+datasource集合的key就是配置里的dlcms、dlcms_01等，value就是数据源信息，包括url、账号密码等。
+3.继承AbstractRoutingDataSource 重写determineCurrentLookupKey @Slf4j @Component public class DlcmsRoutingDataSource extends AbstractRoutingDataSource { public DlcmsRoutingDataSource(DlcmsDataSourceProfile profile) { Map&amp;lt;String, DataSourceProperties&amp;gt; datasource = profile.</description>
+    </item>
+    
+    <item>
+      <title>Markdown Guide (modified)</title>
+      <link>https://gaoxinlxl.github.io/post/2018/08/30/markdown-guide-modified/</link>
+      <pubDate>Thu, 30 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2018/08/30/markdown-guide-modified/</guid>
+      <description>An h1 header Paragraphs are separated by a blank line.
+2nd paragraph. Italic, bold, and monospace. Itemized lists look like:
+this one that one the other one Note that &amp;mdash; not considering the asterisk &amp;mdash; the actual text content starts at 4-columns in.
+Block quotes are written like so.
+They can span multiple paragraphs, if you like.
+Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., &amp;ldquo;it&amp;rsquo;s all in chapters 12&amp;ndash;14&amp;rdquo;).</description>
+    </item>
+    
+    <item>
+      <title>利用数组建链表</title>
+      <link>https://gaoxinlxl.github.io/post/2018/04/19/%E5%88%A9%E7%94%A8%E6%95%B0%E7%BB%84%E5%BB%BA%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Thu, 19 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2018/04/19/%E5%88%A9%E7%94%A8%E6%95%B0%E7%BB%84%E5%BB%BA%E9%93%BE%E8%A1%A8/</guid>
+      <description>#include&amp;lt;stdio.h&amp;gt; #include&amp;lt;stdlib.h&amp;gt;//这句写上，因为结点空间申请函数malloc()要用此 typedef struct Node{//链表结点定义 int data;//放数据信息 struct Node *next;//指向后继结点的指针 }Node; Node *head(int a[]){//此方法利用数组建链表（尾插法） ，并返回头指针L Node *L, *current,*p;//L是头指针，current是当前结点指针，p是每次新申请结点的指针 L = (Node*)malloc(sizeof(Node));//先给头结点申请个空间 current = L; L-&amp;gt;next = NULL; int i=0; while(a[i]!=&amp;#39;\0&amp;#39;){//只要没将数组元素读完，就继续循环 p = (Node*)malloc(sizeof(Node));//每次读一个数组中的数，都要申请一个节点空间 p-&amp;gt;data = a[i];//将读到的数组中的数字赋给刚申请结点的数据域 current-&amp;gt;next = p; current = p; ++i; } current-&amp;gt;next = NULL; return L; } int main(void){ int x[1024]={1,2,3,6,6,6};//随便建个数组 Node *L,*p; L = head(x);//用数组中的元素建链表，并得到链表头指针 p = L-&amp;gt;next;//从开始结点的信息开始打印 while(p!=NULL){//验证一下打印出来的数是不是数组中的数 printf(&amp;#34;%d\n&amp;#34;,p-&amp;gt;data); p = p-&amp;gt;next; } return 0; } 运行效果如下：</description>
+    </item>
+    
+    <item>
+      <title>Hacker with Bullhorn</title>
+      <link>https://gaoxinlxl.github.io/post/2012/04/23/hacker-with-horn/</link>
+      <pubDate>Mon, 23 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2012/04/23/hacker-with-horn/</guid>
+      <description>Hacker with bullhorn: &amp;ldquo;Save your money! Accept one of our free tanks! It is invulnerable, and can drive across rocks and swamps at ninety miles an hour while getting a hundred miles to the gallon!&amp;rdquo;
+Prospective station wagon buyer: &amp;ldquo;I know what you say is true&amp;hellip;but&amp;hellip;er&amp;hellip;I don&amp;rsquo;t know how to maintain a tank!&amp;rdquo;
+Bullhorn: &amp;ldquo;You don&amp;rsquo;t know how to maintain a station wagon either!&amp;rdquo;
+Buyer: &amp;ldquo;But this dealership has mechanics on staff.</description>
+    </item>
+    
+    <item>
+      <title>Command Line Awesomeness</title>
+      <link>https://gaoxinlxl.github.io/post/2012/03/12/command-line-awesomeness/</link>
+      <pubDate>Mon, 12 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2012/03/12/command-line-awesomeness/</guid>
+      <description>This crud is called HTML (HyperText Markup Language) and it is basically a very simple programming language instructing your web browser how to draw a page on a screen. Anyone can learn HTML and many people do. The important thing is that no matter what splendid multimedia web pages they might represent, HTML files are just telegrams.
+When Ronald Reagan was a radio announcer, he used to call baseball games by reading the terse descriptions that trickled in over the telegraph wire and were printed out on a paper tape.</description>
+    </item>
+    
+    <item>
+      <title>Juicy Code</title>
+      <link>https://gaoxinlxl.github.io/post/2012/01/23/juicy-code/</link>
+      <pubDate>Mon, 23 Jan 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2012/01/23/juicy-code/</guid>
+      <description>Check out this JUICY! code:
+def with_value_from_database(value) self.class.from_database(name, value, type) end def with_cast_value(value) self.class.with_cast_value(name, value, type) end def with_type(type) if changed_in_place? with_value_from_user(value).with_type(type) else self.class.new(name, value_before_type_cast, type, original_attribute) end end </description>
+    </item>
+    
+  </channel>
+</rss>
