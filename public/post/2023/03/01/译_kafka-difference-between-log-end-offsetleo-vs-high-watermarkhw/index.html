@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>译_Kafka - difference between Log end offset(LEO) vs High Watermark(HW) | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">译_Kafka - difference between Log end offset(LEO) vs High Watermark(HW)</span></h1>
+
+<h2 class="date">2023/03/01</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/kafka">Kafka</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <blockquote>
+<p>原文链接：<a href="https://stackoverflow.com/questions/39203215/kafka-difference-between-log-end-offsetleo-vs-high-watermarkhw">https://stackoverflow.com/questions/39203215/kafka-difference-between-log-end-offsetleo-vs-high-watermarkhw</a>
+这里简单翻译一下其中一个回答。</p>
+</blockquote>
+<p>让我们从Google上能够找到的一个最流行的<code>watermark</code>定义开始吧。</p>
+<p>“HW就是被成功复制到所有日志副本的那个最后一个消息的位移。”</p>
+<p>对于上述定义我是不太信服的，经过更深层次的探索，我发现了如下图片：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/6eaed92f7c25ac46ca42453a00b72f43.png" alt="https://i.imgtg.com/2023/03/01/VZUjP.png"></p>
+<p>这出现了什么问题？图片最右边的<code>stuck follower</code> 并没有收到第4条消息。也许在google找到的第一个定义并不完备，作者想表达的实际意图是：“HW是被成功复制到所有ISR的最后一条消息的位移”。</p>
+<p>在本能指引下，我发现了这篇<a href="https://rongxinblog.wordpress.com/2016/07/29/kafka-high-watermark/">文章</a>，提供了<code>watermark</code> 在代码中如何被计算的细节。</p>
+<p>我发现文章中的<code>watermark</code> 被定义的更加精确：</p>
+<p>“HW被计算为分区ISR中的最小LEO，以及它是单调递增的。”</p>
+<p>这个回答及附带的代码印证了我的直觉。</p>
+<p>总的来说，我认为<code>watermark</code> 的细节定义展现了LEO和WH的区别。最后提交的位移和LEO在ISR-Fellow中可能重合，但就像第一个链接的图片所示，对Leader来说可能并非如此。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

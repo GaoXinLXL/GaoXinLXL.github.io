@@ -6,7 +6,59 @@
     <description>Recent content in Posts on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>译_Kafka - difference between Log end offset(LEO) vs High Watermark(HW)</title>
+      <link>https://gaoxinlxl.github.io/post/2023/03/01/%E8%AF%91_kafka-difference-between-log-end-offsetleo-vs-high-watermarkhw/</link>
+      <pubDate>Wed, 01 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2023/03/01/%E8%AF%91_kafka-difference-between-log-end-offsetleo-vs-high-watermarkhw/</guid>
+      <description>原文链接：https://stackoverflow.com/questions/39203215/kafka-difference-between-log-end-offsetleo-vs-high-watermarkhw 这里简单翻译一下其中一个回答。
+让我们从Google上能够找到的一个最流行的watermark定义开始吧。
+“HW就是被成功复制到所有日志副本的那个最后一个消息的位移。”
+对于上述定义我是不太信服的，经过更深层次的探索，我发现了如下图片：
+这出现了什么问题？图片最右边的stuck follower 并没有收到第4条消息。也许在google找到的第一个定义并不完备，作者想表达的实际意图是：“HW是被成功复制到所有ISR的最后一条消息的位移”。
+在本能指引下，我发现了这篇文章，提供了watermark 在代码中如何被计算的细节。
+我发现文章中的watermark 被定义的更加精确：
+“HW被计算为分区ISR中的最小LEO，以及它是单调递增的。”
+这个回答及附带的代码印证了我的直觉。
+总的来说，我认为watermark 的细节定义展现了LEO和WH的区别。最后提交的位移和LEO在ISR-Fellow中可能重合，但就像第一个链接的图片所示，对Leader来说可能并非如此。</description>
+    </item>
+    
+    <item>
+      <title>译_Kafka Consumer Auto Offset Reset</title>
+      <link>https://gaoxinlxl.github.io/post/2023/02/23/%E8%AF%91_kafka-consumer-auto-offset-reset/</link>
+      <pubDate>Thu, 23 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2023/02/23/%E8%AF%91_kafka-consumer-auto-offset-reset/</guid>
+      <description> 原文：https://www.lydtechconsulting.com/blog-kafka-auto-offset-reset.html
+引言 当没有初始化的位移（offset）时，这个auto.offset.reset 配置定义了一个消费者（consumer）在某个主题（topic）的分区（partition）消费时，该如何去消费。当一个新的消费者组被定义并且首次监听某个主题时，我们通常会关注到这个配置。这个配置将会告诉组内的消费者们是从分区的开头还是结尾读取。
+消费消息 每个 Kafka 消费者都属于一个消费者组（consumer group），由消费者的 group.id 配置分组在一起。一个消费者组将包含一个或多个消费者。消费者组中的消费者将被分配到主题分区以消费他们的消息。每个分区将只有一个消费者分配给它，尽管一个消费者可以分配给任意一个主题中的多个分区，并且类似地分配给它订阅的所有主题中的分区。
+当一个新的消费者组首次被创建以及组内消费者被分配到主题分区时，它们必须被指定从哪里开始轮询（polling）消息。除非已经被告知从某个具体的位移开始轮询（一般不常见），否则有两种主要方式去指定。第一种方式，从分区最开始处开始读取消息，处理分区日志中存在的每一条信息。第二种方式，当消费者开始监听时，仅仅读取最新写入的信息。
+配置 当消费者组没有初始化位移时，到底是从分区开头读取信息还是仅仅处理最新消息，这个选择由消费端的auto.offset.reset 配置决定。下表展示了该配置的取值情况。
+Value Usage earliest 重置位移到最开始处，从分区最开始处消费。 latest 重置位移到最新位置，从分区尾部开始消费（默认）。 none 如果消费者组中无位移，则抛出异常 一旦消费者组写入了位移，则该配置不再生效。如果消费者组中的消费者被停止然后重新启动，他们将从最后一个偏移量开始消费。
+Earliest的作用 将新消费者配置为auto.offset.reset: earliest 将导致它消费分区上的所有内容。在以下示例中，分区有两条消息“foo”和“bar”，这些消息将被使用：
+当然，分区上可能包含数百万条信息，所有要确保明白数据量以及系统不被压垮。这些消息可以追溯到数周或数月之前，也可以追溯到系统的开始，具体取决于主题的保留期限。retention.ms 设置为 -1 意味着不会丢弃任何旧消息，因此将轮询所有消息。
+Latest的作用 将新消费者配置为 auto.offset.reset: latest 将导致它仅消费写入分区的新消息。在上述场景中，仅会消费偏移量 (3) 的新消息。已经存在的消息“foo”和“bar”将会被跳过。
+消费者是否应该配置为跳过现有消息应然取决于需求。
+数据丢失风险 存在一种极端场景会导致数据的丢失，导致在可重试的异常情况下不会重新传递消息。此场景适用于尚未记录任何当前偏移量（或偏移量已被删除）的新消费者组。
+两个消费者实例 A 和 B 加入一个新的消费者组。 消费者实例配置为auto.offset.reset:latest（即仅限新消息）。 消费者 A 从主题分区中消费一条新消息。 消费者 A 在消息处理完成之前死亡。标记消息被消费的消费者位移没有被更新。 消费者组再平衡（rebalances），消费者B被分配到主题分区。 由于没有有效位移，以及auto.offset.reset 设置的是latest ，这个消息是不会被消费的。 由于A已经读到了消息，因此期望在失败的情况下，这个消息能够重新分发给下一个该分区上的消费者。然而在该场景下，数据却实际上丢失了。
+结论 消费者首次监听分区时，能够被配置为消费所以信息还是只消费新的信息。采取何种设置应取决于应用需求。如果要消费所以信息，则要考虑数据量以及处理这些数据要耗费的资源的影响。
+参考资料
+https://www.lydtechconsulting.com/blog-kafka-auto-offset-reset.html https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#auto.offset.reset </description>
+    </item>
+    
+    <item>
+      <title>logback日志配置&#43;docker挂载</title>
+      <link>https://gaoxinlxl.github.io/post/2023/02/16/logback%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE-docker%E6%8C%82%E8%BD%BD/</link>
+      <pubDate>Thu, 16 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2023/02/16/logback%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE-docker%E6%8C%82%E8%BD%BD/</guid>
+      <description>背景：日志配置文件logback-spring.xml 、线上docker 部署 需求：日志能够在linux机器指定路径上查阅
+1.日志文件配置 &amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;property name=&amp;#34;CONSOLE_LOG_PATTERN&amp;#34; value=&amp;#34;%d{yyyy-MM-dd HH:mm:ss.SSS} %5p --- [%15.15t] %-80.80logger{79} [%line] : %m%n&amp;#34;/&amp;gt; &amp;lt;appender name=&amp;#34;CONSOLE&amp;#34; class=&amp;#34;ch.qos.logback.core.ConsoleAppender&amp;#34;&amp;gt; &amp;lt;filter class=&amp;#34;ch.qos.logback.classic.filter.ThresholdFilter&amp;#34;&amp;gt; &amp;lt;level&amp;gt;debug&amp;lt;/level&amp;gt; &amp;lt;/filter&amp;gt; &amp;lt;encoder&amp;gt; &amp;lt;Pattern&amp;gt;${CONSOLE_LOG_PATTERN}&amp;lt;/Pattern&amp;gt; &amp;lt;charset&amp;gt;UTF-8&amp;lt;/charset&amp;gt; &amp;lt;/encoder&amp;gt; &amp;lt;/appender&amp;gt; &amp;lt;appender name=&amp;#34;INFO_FILE&amp;#34; class=&amp;#34;ch.qos.logback.core.rolling.RollingFileAppender&amp;#34;&amp;gt; &amp;lt;file&amp;gt;/home/data/app/plg/log/spring.log&amp;lt;/file&amp;gt; &amp;lt;encoder&amp;gt; &amp;lt;pattern&amp;gt;${CONSOLE_LOG_PATTERN}&amp;lt;/pattern&amp;gt; &amp;lt;charset&amp;gt;UTF-8&amp;lt;/charset&amp;gt; &amp;lt;!-- 设置字符集 --&amp;gt; &amp;lt;/encoder&amp;gt; &amp;lt;rollingPolicy class=&amp;#34;ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy&amp;#34;&amp;gt; &amp;lt;fileNamePattern&amp;gt;/home/data/app/plg/log/spring.log.%d{yyyy-MM-dd}.%i.gz&amp;lt;/fileNamePattern&amp;gt; &amp;lt;maxFileSize&amp;gt;800MB&amp;lt;/maxFileSize&amp;gt; &amp;lt;maxHistory&amp;gt;10&amp;lt;/maxHistory&amp;gt; &amp;lt;totalSizeCap&amp;gt;30GB&amp;lt;/totalSizeCap&amp;gt; &amp;lt;/rollingPolicy&amp;gt; &amp;lt;filter class=&amp;#34;ch.qos.logback.classic.filter.LevelFilter&amp;#34;&amp;gt; &amp;lt;level&amp;gt;INFO&amp;lt;/level&amp;gt; &amp;lt;onMatch&amp;gt;ACCEPT&amp;lt;/onMatch&amp;gt; &amp;lt;onMismatch&amp;gt;DENY&amp;lt;/onMismatch&amp;gt; &amp;lt;/filter&amp;gt; &amp;lt;/appender&amp;gt; &amp;lt;root level=&amp;#34;INFO&amp;#34;&amp;gt; &amp;lt;appender-ref ref=&amp;#34;INFO_FILE&amp;#34;/&amp;gt; &amp;lt;appender-ref ref=&amp;#34;CONSOLE&amp;#34;/&amp;gt; &amp;lt;/root&amp;gt; &amp;lt;/configuration&amp;gt; 重点关注该配置：
+&amp;lt;file&amp;gt;/home/data/app/plg/log/spring.log&amp;lt;/file&amp;gt; 指明了日志文件在服务器中的路径为/home/data/app/plg/log/spring.log 。但要注意，由于项目由docker部署，日志会保存在docker对应项目容器的该路径下，docker容器重启会丢失数据，所以需要需要将这部分信息持久化保存到服务器上。借助docker挂载完成日志文件的持久化。</description>
+    </item>
+    
     <item>
       <title>AbstractRoutingDataSource&#43;Mybatis拦截器实现动态切换数据源与切库</title>
       <link>https://gaoxinlxl.github.io/post/2023/02/14/abstractroutingdatasource-mybatis%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2%E6%95%B0%E6%8D%AE%E6%BA%90%E4%B8%8E%E5%88%87%E5%BA%93/</link>
@@ -19,6 +71,21 @@ dlcms: dataSource: dlcms: url: jdbc:mysql://${MYSQL_URL_1}:${MYSQL_PORT}/dlcms?u
 2.读取数据源配置 @Component @ConfigurationProperties(prefix = &amp;#34;dlcms&amp;#34;) public class DlcmsDataSourceProfile { private Map&amp;lt;String, DataSourceProperties&amp;gt; datasource; public Map&amp;lt;String, DataSourceProperties&amp;gt; getDatasource() { return datasource; } public void setDatasource(Map&amp;lt;String, DataSourceProperties&amp;gt; datasource) { this.datasource = datasource; } } SpringBoot启动时会加载配置，将以dlcms 开头的配置存放进 datasource 同名Map&amp;lt;String, DataSourceProperties&amp;gt;集合
 datasource集合的key就是配置里的dlcms、dlcms_01等，value就是数据源信息，包括url、账号密码等。
 3.继承AbstractRoutingDataSource 重写determineCurrentLookupKey @Slf4j @Component public class DlcmsRoutingDataSource extends AbstractRoutingDataSource { public DlcmsRoutingDataSource(DlcmsDataSourceProfile profile) { Map&amp;lt;String, DataSourceProperties&amp;gt; datasource = profile.</description>
+    </item>
+    
+    <item>
+      <title>Flyway维护多数据源下的表</title>
+      <link>https://gaoxinlxl.github.io/post/2022/02/15/flyway%E7%BB%B4%E6%8A%A4%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E4%B8%8B%E7%9A%84%E8%A1%A8/</link>
+      <pubDate>Tue, 15 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2022/02/15/flyway%E7%BB%B4%E6%8A%A4%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E4%B8%8B%E7%9A%84%E8%A1%A8/</guid>
+      <description>背景：新项目基于一个老项目进行，老项目是一个分库的项目（线上多个机器运行MySQL实例，每个实例有N个分库，数据按照一定规则分库存储）。新项目也是分库存储。 要求：方便地维护数据库。不同数据源的多个分库下有相同结构的表，更新其中一个表结构，其他数据源的不同分库下的该类表结构也会更新（业务限定了分库下的表结构一致）。 工具：Flyway
+1.引入依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.flywaydb&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;flyway-core&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;5.2.4&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 2.书写配置 spring: profiles: active: &amp;#39;@spring.profiles@&amp;#39; flyway: enabled: true baseline-on-migrate: true validate-on-migrate: false placeholderReplacement: false ignoreMissingMigrations: true locations: &amp;#34;classpath:db/dlcms&amp;#34;#由于线上是多源数据，代码启动时在FlywayConfig配置类中转换数据源 其中比较关键的配置是locations ，该路径下存放要执行的sql脚本。
+3.SQL脚本存放 Flyway配置的SQL脚本存放位置是&amp;quot;classpath:db/dlcms&amp;quot; ，但实际上还可以根据业务需求存放到其他位置，便于管理。但要读取到其他地方的SQL文件，就需要自定义执行migrate() 。
+4.执行migrate() 一般单数据源，不必自己去执行该方法，启动就会检查版本并执行locations配置的路径下的脚本。但在多数据源且存在分库的情况下，为了简化sql脚本需要手动执行migrate() ，便于管理。
+利用SpringBoot的配置类，在项目启动的时候就运行该方法，等数据库更新完后，项目才能算启动成功。
+配置类代码：
+@Slf4j @Configuration public class FlywayConfig { @Resource private InstanceMapCache instanceMapCache; @Value(&amp;#34;${spring.flyway.locations}&amp;#34;) private String dlcms; @Value(&amp;#34;${spring.flyway.baseline-on-migrate}&amp;#34;) private boolean baselineOnMigrate; @Value(&amp;#34;${spring.flyway.validate-on-migrate}&amp;#34;) private boolean validateOnMigrate; @Value(&amp;#34;${spring.flyway.placeholderReplacement}&amp;#34;) private boolean placeholderReplacement; @Value(&amp;#34;${spring.flyway.ignoreMissingMigrations}&amp;#34;) private boolean ignoreMissingMigrations; @Value(&amp;#34;${flyway.instance1}&amp;#34;) private String instanceList1; @Value(&amp;#34;${flyway.</description>
     </item>
     
     <item>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>logback日志配置&#43;docker挂载 | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">logback日志配置+docker挂载</span></h1>
+
+<h2 class="date">2023/02/16</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/java">Java</a> <a href="/tags/mysql">MySQL</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <blockquote>
+<p>背景：日志配置文件<code>logback-spring.xml</code> 、线上<code>docker</code> 部署
+需求：日志能够在linux机器指定路径上查阅</p>
+</blockquote>
+<h1 id="1日志文件配置">1.日志文件配置</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;configuration&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;CONSOLE_LOG_PATTERN&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;%d{yyyy-MM-dd HH:mm:ss.SSS} %5p --- [%15.15t] %-80.80logger{79} [%line] : %m%n&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;appender</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;CONSOLE&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;ch.qos.logback.core.ConsoleAppender&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;filter</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;ch.qos.logback.classic.filter.ThresholdFilter&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;level&gt;</span>debug<span style="color:#f92672">&lt;/level&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/filter&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;encoder&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;Pattern&gt;</span>${CONSOLE_LOG_PATTERN}<span style="color:#f92672">&lt;/Pattern&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;charset&gt;</span>UTF-8<span style="color:#f92672">&lt;/charset&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/encoder&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/appender&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;appender</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;INFO_FILE&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;ch.qos.logback.core.rolling.RollingFileAppender&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;file&gt;</span>/home/data/app/plg/log/spring.log<span style="color:#f92672">&lt;/file&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;encoder&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;pattern&gt;</span>${CONSOLE_LOG_PATTERN}<span style="color:#f92672">&lt;/pattern&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;charset&gt;</span>UTF-8<span style="color:#f92672">&lt;/charset&gt;</span> <span style="color:#75715e">&lt;!-- 设置字符集 --&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/encoder&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;rollingPolicy</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;fileNamePattern&gt;</span>/home/data/app/plg/log/spring.log.%d{yyyy-MM-dd}.%i.gz<span style="color:#f92672">&lt;/fileNamePattern&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;maxFileSize&gt;</span>800MB<span style="color:#f92672">&lt;/maxFileSize&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;maxHistory&gt;</span>10<span style="color:#f92672">&lt;/maxHistory&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;totalSizeCap&gt;</span>30GB<span style="color:#f92672">&lt;/totalSizeCap&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/rollingPolicy&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;filter</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;ch.qos.logback.classic.filter.LevelFilter&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;level&gt;</span>INFO<span style="color:#f92672">&lt;/level&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;onMatch&gt;</span>ACCEPT<span style="color:#f92672">&lt;/onMatch&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;onMismatch&gt;</span>DENY<span style="color:#f92672">&lt;/onMismatch&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;/filter&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/appender&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;root</span> <span style="color:#a6e22e">level=</span><span style="color:#e6db74">&#34;INFO&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;appender-ref</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;INFO_FILE&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;appender-ref</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;CONSOLE&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/root&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/configuration&gt;</span>
+</span></span></code></pre></div><p>重点关注该配置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;file&gt;</span>/home/data/app/plg/log/spring.log<span style="color:#f92672">&lt;/file&gt;</span>
+</span></span></code></pre></div><p>指明了日志文件在服务器中的路径为<code>/home/data/app/plg/log/spring.log</code> 。但要注意，由于项目由docker部署，日志会保存在docker对应项目容器的该路径下，docker容器重启会丢失数据，所以需要需要将这部分信息持久化保存到服务器上。借助docker挂载完成日志文件的持久化。</p>
+<h1 id="2docker挂载配置">2.docker挂载配置</h1>
+<p>项目使用docker-compose管理，配置文件中关于挂载部分如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>volumes:
+</span></span><span style="display:flex;"><span>      - /home/data/plg/logs/spring_logs:/home/data/app/
+</span></span></code></pre></div><p>将容器中/home/data/app/下的数据，挂载到服务器的/home/data/plg/logs/spring_logs路径下</p>
+<h1 id="3结果">3.结果</h1>
+<p>最终，项目产生的日志会落在容器该位置/home/data/app/plg/log/spring.log，根据挂载配置，会被挂载到服务器的该位置/home/data/plg/logs/spring_logs/plg/log/spring.log</p>
+<p>后续不用进入容器，直接查服务器对应位置日志就行。</p>
+<h1 id="4总结">4.总结</h1>
+<ul>
+<li><code>logback-spring.xml</code> 中配置的日志地址，位于服务器对应位置，如果是docker部署，就进入docker查看对应位置</li>
+<li><code>docker-compose.yml</code>中配置的挂载，将容器内的数据持久化到服务器对应路径下</li>
+<li>后续查日志，直接查服务器对应位置下的日志就行</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+
