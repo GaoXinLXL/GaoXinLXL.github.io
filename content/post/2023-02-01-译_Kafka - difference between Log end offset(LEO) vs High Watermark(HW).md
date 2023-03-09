@@ -20,7 +20,7 @@ tags:
 
 对于上述定义我是不太信服的，经过更深层次的探索，我发现了如下图片：
 
-![https://i.imgtg.com/2023/03/01/VZUjP.png](https://img-blog.csdnimg.cn/img_convert/6eaed92f7c25ac46ca42453a00b72f43.png)
+![image.png](https://s2.loli.net/2023/03/09/Qk7vVaUtiuzGdmS.png)
 
 这出现了什么问题？图片最右边的`stuck follower` 并没有收到第4条消息。也许在google找到的第一个定义并不完备，作者想表达的实际意图是：“HW是被成功复制到所有ISR的最后一条消息的位移”。
 

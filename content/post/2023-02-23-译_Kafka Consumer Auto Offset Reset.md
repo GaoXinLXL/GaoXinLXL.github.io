@@ -34,7 +34,7 @@ tags:
 
 # Earliest的作用
 
-![https://i.imgtg.com/2023/02/23/sEClx.png](https://img-blog.csdnimg.cn/img_convert/b09ec909a2561ca5922297e02041610b.png)
+![image.png](https://s2.loli.net/2023/03/09/OUjVwpKyn2lQmhF.png)
 
 将新消费者配置为`auto.offset.reset: earliest` 将导致它消费分区上的所有内容。在以下示例中，分区有两条消息“foo”和“bar”，这些消息将被使用：
 
@@ -44,7 +44,7 @@ tags:
 
 将新消费者配置为 `auto.offset.reset: latest` 将导致它仅消费写入分区的新消息。在上述场景中，仅会消费偏移量 (3) 的新消息。已经存在的消息“foo”和“bar”将会被跳过。
 
-![https://i.imgtg.com/2023/02/23/sGK9B.png](https://img-blog.csdnimg.cn/img_convert/dc1500b70e2f3660c20cc7b7ace2b115.png)
+![image.png](https://s2.loli.net/2023/03/09/xdaUGMX7ZzrkH29.png)
 
 消费者是否应该配置为跳过现有消息应然取决于需求。
 
