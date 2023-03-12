@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>Spire.Doc在Word上的简单应用 | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Spire.Doc在Word上的简单应用</span></h1>
+
+<h2 class="date">2019/09/12</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/c">C#</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <blockquote>
+<p>一位同学让帮忙做个小功能：提前在word上建立模板，程序运行后直接输出到对应位置，避免手动输入数据。</p>
+</blockquote>
+<h1 id="效果如下">效果如下</h1>
+<p><img src="https://i.loli.net/2019/11/05/oCv56T4gI2GOkic.png" alt="导出按钮"></p>
+<p><img src="https://i.loli.net/2019/11/05/R7wkA3OjHfsEMYr.png" alt="Word中结果"></p>
+<h1 id="程序使用前须知-程序使用前须知程序使用前须知"><a href="#%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8%E5%89%8D%E9%A1%BB%E7%9F%A5" title="程序使用前须知"></a>程序使用前须知</h1>
+<ul>
+<li>
+<p>提前建立两个word文件，其中一个作为模板，另一个作为结果展示文件</p>
+<ul>
+<li>
+<p>模板里面可以绘制表格，表格中对结果部分使用<code>占位</code>符，如图所示：</p>
+<p><img src="https://i.loli.net/2019/11/05/n7XB4FgRkv3aGVN.png" alt="模板"></p>
+</li>
+<li>
+<p>在程序运行后，另一个word就会展示如上面<code>结果展示</code>中的结果</p>
+</li>
+</ul>
+</li>
+<li>
+<p>还有很多对word的操作，可自行网上搜索Spire</p>
+</li>
+</ul>
+<h1 id="准备操作-准备操作准备操作"><a href="#%E5%87%86%E5%A4%87%E6%93%8D%E4%BD%9C" title="准备操作"></a>准备操作</h1>
+<h2 id="工具-工具工具"><a href="#%E5%B7%A5%E5%85%B7" title="工具"></a>工具</h2>
+<ul>
+<li>C#</li>
+<li>Spire.Doc for .NET</li>
+</ul>
+<h1 id="spire简介-spire简介spire简介"><a href="#Spire%E7%AE%80%E4%BB%8B" title="Spire简介"></a>Spire简介</h1>
+<p><strong>Spire.Doc for .NET</strong>是一款由E-iceblue公司开发的专业的Word .NET<a href="https://baike.baidu.com/item/%E7%B1%BB%E5%BA%93/3351433">类库</a>，使用该工具开发人员可以在任意<a href="https://baike.baidu.com/item/.NET">.NET</a>平台（<a href="https://baike.baidu.com/item/C%23">C#</a>，<a href="https://baike.baidu.com/item/VB.NET">VB.NET</a>，<a href="https://baike.baidu.com/item/ASP.NET">ASP.NET</a>）上快速创建，读取，写入，转换，打印Word文档。</p>
+<p><code>简而言之，利用Spire来快速实现需求</code></p>
+<p>那Spire从官网下载速度有点慢</p>
+<p><img src="https://i.loli.net/2019/11/05/jM9YExJrPHqWdUD.png" alt="需要的相关文件"></p>
+<h2 id="spire的具体使用-spire的具体使用spire的具体使用"><a href="#Spire%E7%9A%84%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8" title="Spire的具体使用"></a>Spire的具体使用</h2>
+<p>在解决方案资源管理器里，<code>引用</code>添加就行</p>
+<p><img src="https://i.loli.net/2019/11/05/ZPEHGQneULmzlI1.png" alt="引用添加"></p>
+<p>然后在代码开头引入命名空间就完成准备工作了</p>
+<p><img src="https://i.loli.net/2019/11/05/aUqJ6kDNpETPrlj.png" alt="namespace"></p>
+<h1 id="代码实现-代码实现代码实现"><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0" title="代码实现"></a>代码实现</h1>
+<p>搞个<code>button</code>来写</p>
+<p><img src="https://i.loli.net/2019/11/05/Yc6wQLqmvVE1oJe.png" alt="button"></p>
+<p>搞个例子试试：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c#" data-lang="c#"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> Spire.Doc;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Collections.Generic;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.ComponentModel;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Data;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Drawing;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Linq;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Text;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Threading.Tasks;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> System.Windows.Forms;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">namespace</span> WindowsFormsApplication1
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Form1</span> : Form
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> Form1()
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            InitializeComponent();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> button1_Click(<span style="color:#66d9ef">object</span> sender, EventArgs e)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> i = <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">double</span> a, b, x,y;
+</span></span><span style="display:flex;"><span>            a = <span style="color:#ae81ff">1.2</span>;
+</span></span><span style="display:flex;"><span>            b = <span style="color:#ae81ff">2.3</span>;
+</span></span><span style="display:flex;"><span>            x = (a + b)/<span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>            y = ((a-x)*(a-x)+(b-x)*(b-x))/<span style="color:#ae81ff">2</span>;<span style="color:#75715e">//方差</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> doc = <span style="color:#66d9ef">new</span> Document();
+</span></span><span style="display:flex;"><span>            doc.LoadFromFile(<span style="color:#e6db74">&#34;F:\\test\\自己定义一个模板.docx&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            doc.Replace(<span style="color:#e6db74">&#34;$[form0]$&#34;</span>, <span style="color:#e6db74">&#34;绕皮皮&#34;</span>, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            doc.Replace(<span style="color:#e6db74">&#34;$[form1]$&#34;</span>, y.ToString(), <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            doc.Replace(<span style="color:#e6db74">&#34;$[form&#34;</span>+i+<span style="color:#e6db74">&#34;]$&#34;</span>, <span style="color:#e6db74">&#34;666&#34;</span>, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(y&lt;<span style="color:#ae81ff">0.5</span>)
+</span></span><span style="display:flex;"><span>                doc.Replace(<span style="color:#e6db74">&#34;$[form3]$&#34;</span>, <span style="color:#e6db74">&#34;良好&#34;</span>, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>                doc.Replace(<span style="color:#e6db74">&#34;$[form3]$&#34;</span>, <span style="color:#e6db74">&#34;差劲&#34;</span>, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//显示一下日期</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">string</span> time = DateTime.Now.ToLocalTime().ToString();
+</span></span><span style="display:flex;"><span>            doc.Replace(<span style="color:#e6db74">&#34;$[form4]$&#34;</span>, time, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            doc.SaveToFile(<span style="color:#e6db74">&#34;F:\\test\\根据模板导出的数据.docx&#34;</span>);
+</span></span><span style="display:flex;"><span>            doc.Close();
+</span></span><span style="display:flex;"><span>            MessageBox.Show(<span style="color:#e6db74">&#34;导出成功&#34;</span>);           
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="总结-总结总结"><a href="#%E6%80%BB%E7%BB%93" title="总结"></a>总结</h1>
+<ul>
+<li>利用Spire可以大大简化对word的操作</li>
+<li>提前建立模板，利用好占位符</li>
+<li>更多操作请查找Spire资料</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

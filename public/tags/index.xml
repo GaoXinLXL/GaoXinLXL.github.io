@@ -35,20 +35,74 @@
     </item>
     
     <item>
-      <title>Markdown</title>
-      <link>https://gaoxinlxl.github.io/tags/markdown/</link>
-      <pubDate>Thu, 30 Aug 2018 00:00:00 +0000</pubDate>
+      <title>Hadoop</title>
+      <link>https://gaoxinlxl.github.io/tags/hadoop/</link>
+      <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://gaoxinlxl.github.io/tags/markdown/</guid>
+      <guid>https://gaoxinlxl.github.io/tags/hadoop/</guid>
       <description></description>
     </item>
     
     <item>
       <title>C</title>
       <link>https://gaoxinlxl.github.io/tags/c/</link>
-      <pubDate>Thu, 19 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
       
       <guid>https://gaoxinlxl.github.io/tags/c/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>并行计算</title>
+      <link>https://gaoxinlxl.github.io/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/</link>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>点云</title>
+      <link>https://gaoxinlxl.github.io/tags/%E7%82%B9%E4%BA%91/</link>
+      <pubDate>Mon, 11 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/tags/%E7%82%B9%E4%BA%91/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hexo</title>
+      <link>https://gaoxinlxl.github.io/tags/hexo/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/tags/hexo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MATLAB</title>
+      <link>https://gaoxinlxl.github.io/tags/matlab/</link>
+      <pubDate>Thu, 19 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/tags/matlab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C#</title>
+      <link>https://gaoxinlxl.github.io/tags/c#/</link>
+      <pubDate>Thu, 12 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/tags/c#/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Markdown</title>
+      <link>https://gaoxinlxl.github.io/tags/markdown/</link>
+      <pubDate>Thu, 30 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/tags/markdown/</guid>
       <description></description>
     </item>
     

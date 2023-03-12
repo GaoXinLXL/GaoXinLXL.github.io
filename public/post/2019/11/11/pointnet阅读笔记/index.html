@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>PointNet阅读笔记 | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">PointNet阅读笔记</span></h1>
+
+<h2 class="date">2019/11/11</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E7%82%B9%E4%BA%91">点云</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <blockquote>
+<p>论文链接：http://stanford.edu/~rqi/pointnet/</p>
+<p>项目地址：https://github.com/charlesq34/pointnet</p>
+</blockquote>
+<h1 id="点云3大特征问题-点云3大特征问题点云3大特征问题"><a href="#%E7%82%B9%E4%BA%913%E5%A4%A7%E7%89%B9%E5%BE%81%E9%97%AE%E9%A2%98" title="点云3大特征问题"></a>点云3大特征问题</h1>
+<ol>
+<li>
+<p>无序性：点云数据是一个集合，对数据的输入顺序是不敏感的。</p>
+</li>
+<li>
+<p>点与点之间的空间关系</p>
+</li>
+<li>
+<p>不变性：点云整体空间变换不改变性质，例如旋转和平移。</p>
+</li>
+</ol>
+<h1 id="pointnet模型-pointnet模型pointnet模型"><a href="#PointNet%E6%A8%A1%E5%9E%8B" title="PointNet模型"></a>PointNet模型</h1>
+<p><img src="https://i.imgtg.com/2023/03/09/Yc5ot.png" alt="Yc5ot.png"></p>
+<ol>
+<li>输入为一帧的全部点云数据的集合，表示为一个nx3的2d tensor，其中n代表点云数量，3对应xyz坐标。</li>
+<li>输入数据先通过一个 T-Net学习到的转换矩阵相乘来对齐，保证了模型对特定空间转换的不变性。</li>
+<li>通过多次mlp对各点云数据进行特征提取后，再用一个T-Net对特征进行对齐，之后再进行mpl。</li>
+<li>在特征的各个维度上执行maxpooling操作来得到最终的全局特征。</li>
+<li>对分类任务，将全局特征通过mpl来预测最后的分类分数；对分割任务，将全局特征和之前学习到的各点云的局部特征进行串联，再通过mlp得到每个数据点的分类结果。</li>
+</ol>
+<h1 id="解决三大特性问题-解决三大特性问题解决三大特性问题"><a href="#%E8%A7%A3%E5%86%B3%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7%E9%97%AE%E9%A2%98" title="解决三大特性问题"></a>解决三大特性问题</h1>
+<ol>
+<li>
+<p>max-pooling：作为对称函数来解决无序性</p>
+</li>
+<li>
+<p>将局部特征和全局特征进行串联来聚合信息</p>
+</li>
+<li>
+<p>两个联合的对齐网络，用来对齐输入的点和点特征来解决不变性</p>
+</li>
+</ol>
+<h1 id="分类网络-分类网络分类网络"><a href="#%E5%88%86%E7%B1%BB%E7%BD%91%E7%BB%9C" title="分类网络"></a>分类网络</h1>
+<ul>
+<li>第一个变换网络输入未处理的点云，输出回归3x3矩阵</li>
+<li>第二个变换网络输出64x64矩阵</li>
+<li>注意：这里的变换网络就是T-Net</li>
+</ul>
+<h1 id="分割网络-分割网络分割网络"><a href="#%E5%88%86%E5%89%B2%E7%BD%91%E7%BB%9C" title="分割网络"></a>分割网络</h1>
+<ul>
+<li>
+<p>分割网络是分类网络的一个延伸</p>
+</li>
+<li>
+<p>局部点特征（应用第二个变换网络后的结果）和全局特征（max-pooling的输出）按每个点级联。</p>
+</li>
+</ul>
+<h1 id="一些概念-一些概念一些概念"><a href="#%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5" title="一些概念"></a>一些概念</h1>
+<ul>
+<li>
+<p>有多少个卷积核，就有多少个feature map</p>
+</li>
+<li>
+<p>池化也叫下采样（池化作用：减少参数量，防止过拟合，为卷积神经网络带来平移不变性）</p>
+</li>
+<li>
+<p>激活函数多用ReLu函数（不再是Sigmoid、tanh激活函数，会造成梯度消失）</p>
+</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

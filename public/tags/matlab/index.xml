@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MATLAB on Classic</title>
+    <link>https://gaoxinlxl.github.io/tags/matlab/</link>
+    <description>Recent content in MATLAB on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 19 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/matlab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MATLAB学习</title>
+      <link>https://gaoxinlxl.github.io/post/2019/09/19/matlab%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Thu, 19 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2019/09/19/matlab%E5%AD%A6%E4%B9%A0/</guid>
+      <description>MATLAB的名称源自Matrix Laboratory，它是一种科学计算软件，专门以矩阵的形式处理数据。
+大二测绘系开设过matlab课程，除了认真上过第一节课，就再也没学了，哪怕是最后的期末作业，都是抄的。当然也就完全体会不到matlab的用处，对它的认识仅仅停留在“matlab”的六个字母上。三年后（2019-9-19），体验了下数学建模，负责编程任务，又重新学习了一下matlab的基本语法。
+基本操作 clear y 将变量y从变量空间中去掉 clear 将所有变量清空 clc 仅仅是清空屏幕 % 注释 ctrl+R 批量注释 ctrl+T 批量取消注释 disp（）：屏幕打印 input（）：输入函数 strcat（）：合并字符串 num2str（）：数字-&amp;gt;字符串 linspace(0,2,5) 产生从0到2的均匀的5个点 zeros(2,3) 初始化2行3列全为0的矩阵 ones(2) 初始化全为1的2阶的矩阵 eye(2) 初始化2阶单位阵 Inf 无穷大 F = A.*B 点乘，对应位置相乘，区别于矩阵乘法 F = A./B 点除，对应位置相除 F = A/B = A * B^-1 ，就是A*B的逆 F = A^2 = A*A F = A.^2 = A.*A x = A(1,3) 取A矩阵的第1行3列 y = A(2,:) 相当于 y = A(2,1:3) 取第二行 Z = A(1:2,1:3) 前2行前3列 A([2,5],:) 只取第2和第5行 10👎1 从10到1，公差为-1 A(2:end,:) 取第2行到最后一行 A(2:end-1,:) 取第2行到倒数第2行 A(:) 取全部元素，输出的是一个列向量 A(1,3) = 0 将0赋值给1行3列 A(2,:) = [6 5 4] 整行的赋值 size（）：求矩阵的大小，几行几列 [r,c] = size(A) 将A的行、列数分别赋值给r、c r = size(A,1) 只返回行数 c = size(A,2) 只返回列数 B = repmat(A,m,n) 将A复制m*n块 inv(B) 求B的逆矩阵 prod(A) 按列相乘 prod(A,2) 按行相乘 E = eig(A) A的全部特征值，组成向量E [V,D] = eig(A) A的全部特征值，构成对角阵D，且A的特征值构成V的列向量 比较和逻辑运算 &amp;gt;&amp;gt; x = [1 2 3 4 5 6 7 8 9]; &amp;gt;&amp;gt; y = [1 4 3 8 6 5 7 2 9]; &amp;gt;&amp;gt; eq = (x==y) eq = 1×9 logical 数组 1 0 1 0 0 0 1 0 1 &amp;gt;&amp;gt; xy = (x&amp;gt;5)&amp;amp;(y&amp;lt;7) xy = 1×9 logical 数组 0 0 0 0 0 1 0 1 0 &amp;gt;&amp;gt; xoy = (x&amp;gt;5)|(y&amp;lt;7) xoy = 1×9 logical 数组 1 1 1 0 1 1 1 1 1 % 把x里小于0的都改为0，省的写for循环 &amp;gt;&amp;gt; x = [1 -2 3 -4 5 -6 7 -8 9]; &amp;gt;&amp;gt; x(x&amp;lt;0) = 0 x = 1 0 3 0 5 0 7 0 9 % 第2行赋值为0 y = 1 2 3 -4 5 6 7 8 9 &amp;gt;&amp;gt; y(2,:)=0 y = 1 2 3 0 0 0 7 8 9 % 先找到第一列中小于0的，再把那一行都设为0 &amp;gt;&amp;gt; y = [1 2 3;-4 5 6;7 8 9] y = 1 2 3 -4 5 6 7 8 9 &amp;gt;&amp;gt; y(y(:,1)&amp;lt;0,:)=0 y = 1 2 3 0 0 0 7 8 9 数组操作函数 flipud（）：行逆序排列 fliplr（）：列逆序排列 rot90（）：逆时针90°旋转 &amp;gt;&amp;gt; A = [1 2 3;4 5 6;7 8 9] A = 1 2 3 4 5 6 7 8 9 &amp;gt;&amp;gt; B = flipud(A) B = 7 8 9 4 5 6 1 2 3 &amp;gt;&amp;gt; C = fliplr(A) C = 3 2 1 6 5 4 9 8 7 &amp;gt;&amp;gt; D = rot90(A) D = 3 6 9 2 5 8 1 4 7 sum（）：求和函数 &amp;gt;&amp;gt; A = [1 2 3]; &amp;gt;&amp;gt; sum(A) ans = 6 &amp;gt;&amp;gt; B = [1 2 3;4 5 6;7 8 9]; &amp;gt;&amp;gt; sum(B) % 相当于sum（B，1）,每列求和 ans = 12 15 18 &amp;gt;&amp;gt; sum(B,2) % 每行求和 ans = 6 15 24 &amp;gt;&amp;gt; sum(B(:)) % 所有总和 ans = 45 &amp;gt;&amp;gt; C = B(:) % 将B矩阵拉成1维向量 C = 1 4 7 2 5 8 3 6 9 &amp;gt;&amp;gt; A = [1 2 3]; &amp;gt;&amp;gt; max(A) ans = 3 &amp;gt;&amp;gt; max(A,2) % 跟2比较，取最大 ans = 2 2 3 &amp;gt;&amp;gt; B = [1 3 9;4 8 6]; % 2维数组取最大，默认取每列最大 &amp;gt;&amp;gt; max(B) ans = 4 8 9 &amp;gt;&amp;gt; max(B,[],2) % 按照行取最大值的格式 ans = 9 8 常用数学函数 sin,cos,tan,cot,asin,acos,atan,acot &amp;gt;&amp;gt; x = 0:pi/6:pi x = 0 0.</description>
+    </item>
+    
+  </channel>
+</rss>

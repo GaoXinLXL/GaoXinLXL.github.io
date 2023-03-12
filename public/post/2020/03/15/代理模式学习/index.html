@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>代理模式学习 | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">代理模式学习</span></h1>
+
+<h2 class="date">2020/03/15</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/java">Java</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <h1 id="静态代理-静态代理静态代理"><a href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86" title="静态代理"></a>静态代理</h1>
+<ol>
+<li>
+<p>创建接口</p>
+</li>
+<li>
+<p>创建被代理类</p>
+<p>实现接口</p>
+</li>
+<li>
+<p>创建代理类</p>
+<p>也要实现同样的接口，同时还要持有被代理对象的引用</p>
+</li>
+<li>
+<p>代理类发挥作用</p>
+<p>代理类执行方法（其实真正执行的核心方法是被代理类的方法）</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Print</span><span style="color:#f92672">{</span><span style="color:#75715e">//接口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Printer</span> <span style="color:#66d9ef">implements</span> Print<span style="color:#f92672">{</span><span style="color:#75715e">//被代理类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;打印中。。。&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ProxyPrinter</span> <span style="color:#66d9ef">implements</span> Print<span style="color:#f92672">{</span><span style="color:#75715e">//代理类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Printer printer<span style="color:#f92672">;</span><span style="color:#75715e">//要得到被代理类的引用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ProxyPrinter<span style="color:#f92672">(</span>Printer printer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">printer</span> <span style="color:#f92672">=</span> printer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;打印前。。。&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        printer<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">();</span><span style="color:#75715e">//调用被代理类的方法
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;打印后。。。&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>        Print p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ProxyPrinter<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Printer<span style="color:#f92672">());</span><span style="color:#75715e">//这里用了向上转型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        p<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">打印前。。。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">打印中。。。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">打印后。。。</span>
+</span></span></code></pre></div><h1 id="动态代理-动态代理动态代理"><a href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86" title="动态代理"></a>动态代理</h1>
+<p>和静态代理相比，创建接口、创建真实的被代理类都不变。</p>
+<ol>
+<li>创建接口</li>
+<li>创建被代理类</li>
+</ol>
+<p>实现接口</p>
+<ol start="3">
+<li>创建一个实现InvocationHandler接口的类（为了好记，我叫它拦截类，可以拦截被代理对象的方法）</li>
+</ol>
+<p>跟静态代理里面代理类一样，要获得被代理类对象的引用（但不是代理类）<br>
+还必须实现invoke()方法，这里面可以对被代理类的方法进行增强</p>
+<ol start="4">
+<li>如何运用？</li>
+</ol>
+<p>创建拦截类对象，传入真实的被代理类对象<br>
+由Proxy类的静态方法_newProxyInstance(3个参数)获得真正的代理对象，并向上转型为接口类型_<br>
+<em>代理类对象执行方法</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Print</span><span style="color:#f92672">{</span><span style="color:#75715e">//接口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Printer</span> <span style="color:#66d9ef">implements</span> Print<span style="color:#f92672">{</span><span style="color:#75715e">//被代理类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;打印中。。。&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ProxyInvocationHandler</span> <span style="color:#66d9ef">implements</span> InvocationHandler<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *  被代理的引用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *  这里用Printer printer也可以运行，但没有用object有意义
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *  这样更灵活，才能体现动态代理的动态
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Object object<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ProxyInvocationHandler<span style="color:#f92672">(</span>Object object<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">object</span> <span style="color:#f92672">=</span> object<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//处理代理实例，并返回结果
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>Object proxy<span style="color:#f92672">,</span> Method method<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;打印前。。。&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        Object result <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>object<span style="color:#f92672">,</span>args<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;打印后。。。&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> result<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Main</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>        ProxyInvocationHandler pih <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ProxyInvocationHandler<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Printer<span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        Print printer <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Print<span style="color:#f92672">)</span>Proxy<span style="color:#f92672">.</span><span style="color:#a6e22e">newProxyInstance</span><span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>            Printer<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getClassLoader</span><span style="color:#f92672">(),</span>Printer<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getInterfaces</span><span style="color:#f92672">(),</span>pih<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        printer<span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">打印前。。。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">打印中。。。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">打印后。。。</span>
+</span></span></code></pre></div><p>对于动态代理，重点要理解下面2个方法：</p>
+<p>🔨Proxy.newProxyInstance(3个参数)方法<br>
+此方法用于生成真正的代理对象</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> Object    <span style="color:#a6e22e">newProxyInstance</span><span style="color:#f92672">(</span>ClassLoader loader<span style="color:#f92672">,</span> <span style="color:#960050;background-color:#1e0010">类</span><span style="color:#f92672">&lt;?&gt;[]</span> interfaces<span style="color:#f92672">,</span> InvocationHandler h<span style="color:#f92672">)</span> 
+</span></span></code></pre></div><p>3个参数：</p>
+<ol>
+<li>loader 被代理类（目标对象）的类加载器</li>
+<li>interface 目标对象实现的接口</li>
+<li>h “拦截类”对象</li>
+</ol>
+<p>注意返回的真正的代理对象需要转型。</p>
+<p>🔨“拦截类”里必须重写的invoke(参数)方法<br>
+其实就是要理解method.invoke(参数)，利用了反射，可以简单地认为用来执行某个的对象的目标方法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>Object obj<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                     Object<span style="color:#f92672">...</span> args<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#66d9ef">throws</span> IllegalAccessException<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                     IllegalArgumentException<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                     InvocationTargetException
+</span></span></code></pre></div><h1 id="classloader是干什么的-classloader是干什么的classloader是干什么的"><a href="#ClassLoader%E6%98%AF%E5%B9%B2%E4%BB%80%E4%B9%88%E7%9A%84%EF%BC%9F" title="ClassLoader是干什么的？"></a>ClassLoader是干什么的？</h1>
+<p>它是用来加载 Class 的。它负责将 Class 的字节码形式转换成内存形式的 Class 对象。字节码可以来自于磁盘文件 *.class，也可以是 jar 包里的 *.class等。字节码的本质就是一个字节数组 []byte。</p>
+<blockquote>
+<p>每个 Class 对象里面都有一个 classLoader 属性记录了当前的类是由谁来加载的。</p>
+</blockquote>
+<p>✨3个重要的ClassLoader<br>
+JVM 中内置了三个重要的 ClassLoader，分别是</p>
+<ul>
+<li>
+<p>BootstrapClassLoader</p>
+</li>
+<li>
+<p>ExtensionClassLoader</p>
+</li>
+<li>
+<p>AppClassLoader。</p>
+<blockquote>
+<p>BootstrapClassLoader 负责加载 JVM 运行时核心类，这些类位于 JAVA_HOME/lib/rt.jar 文件中，我们常用内置库 java.xxx.* 都在里面，比如 java.util.<em>、java.io.</em>、java.nio.<em>、java.lang.</em> 等等。这个 ClassLoader 比较特殊，它是由 C 代码实现的，我们将它称之为「根加载器」。</p>
+</blockquote>
+</li>
+</ul>
+<p>💤</p>
+<blockquote>
+<p>ExtensionClassLoader 负责加载 JVM 扩展类，比如 swing 系列、内置的 js 引擎、xml 解析器 等等，这些库名通常以 javax 开头，它们的 jar 包位于 JAVA_HOME/lib/ext/*.jar 中，有很多 jar 包。</p>
+</blockquote>
+<p>💦</p>
+<blockquote>
+<p>AppClassLoader 才是直接面向我们用户的加载器，它会加载 Classpath 环境变量里定义的路径中的 jar 包和目录。我们自己编写的代码以及使用的第三方 jar 包通常都是由它来加载的。</p>
+</blockquote>
+<h1 id="双亲委派-双亲委派双亲委派"><a href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE" title="双亲委派"></a>双亲委派</h1>
+<blockquote>
+<p>每个 ClassLoader 都很懒，尽量把工作交给父亲做，父亲干不了了自己才会干。每个 ClassLoader 对象内部都会有一个 parent 属性指向它的父加载器。</p>
+</blockquote>
+<p>🛴</p>
+<blockquote>
+<p>AppClassLoader 在加载一个未知的类名时，它并不是立即去搜寻 Classpath，它会首先将这个类名称交给 ExtensionClassLoader 来加载，如果 ExtensionClassLoader 可以加载，那么 AppClassLoader 就不用麻烦了。否则它就会搜索 Classpath 。<br>
+而 ExtensionClassLoader 在加载一个未知的类名时，它也并不是立即搜寻 ext 路径，它会首先将类名称交给 BootstrapClassLoader 来加载，如果 BootstrapClassLoader 可以加载，那么 ExtensionClassLoader 也就不用麻烦了。否则它就会搜索 ext 路径下的 jar 包。</p>
+</blockquote>
+<h1 id="getinterfaces-getinterfacesgetinterfaces"><a href="#getInterfaces" title="getInterfaces()"></a>getInterfaces()</h1>
+<p>以下是**java.lang.Class.getInterfaces()**方法的声明</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Class<span style="color:#f92672">&lt;?&gt;[]</span> getInterfaces<span style="color:#f92672">()</span>
+</span></span></code></pre></div><p>此方法返回这个类中实现接口的数组。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

@@ -47,5 +47,21 @@ datasource集合的key就是配置里的dlcms、dlcms_01等，value就是数据�
 @Slf4j @Configuration public class FlywayConfig { @Resource private InstanceMapCache instanceMapCache; @Value(&amp;#34;${spring.flyway.locations}&amp;#34;) private String dlcms; @Value(&amp;#34;${spring.flyway.baseline-on-migrate}&amp;#34;) private boolean baselineOnMigrate; @Value(&amp;#34;${spring.flyway.validate-on-migrate}&amp;#34;) private boolean validateOnMigrate; @Value(&amp;#34;${spring.flyway.placeholderReplacement}&amp;#34;) private boolean placeholderReplacement; @Value(&amp;#34;${spring.flyway.ignoreMissingMigrations}&amp;#34;) private boolean ignoreMissingMigrations; @Value(&amp;#34;${flyway.instance1}&amp;#34;) private String instanceList1; @Value(&amp;#34;${flyway.</description>
     </item>
     
+    <item>
+      <title>代理模式学习</title>
+      <link>https://gaoxinlxl.github.io/post/2020/03/15/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Sun, 15 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2020/03/15/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0/</guid>
+      <description>静态代理 创建接口
+创建被代理类
+实现接口
+创建代理类
+也要实现同样的接口，同时还要持有被代理对象的引用
+代理类发挥作用
+代理类执行方法（其实真正执行的核心方法是被代理类的方法）
+interface Print{//接口 public void print(); } class Printer implements Print{//被代理类 @Override public void print() { System.out.println(&amp;#34;打印中。。。&amp;#34;); } } class ProxyPrinter implements Print{//代理类 private Printer printer;//要得到被代理类的引用 ProxyPrinter(Printer printer) { this.printer = printer; } @Override public void print() { System.out.println(&amp;#34;打印前。。。&amp;#34;); printer.print();//调用被代理类的方法 System.out.println(&amp;#34;打印后。。。&amp;#34;); } } public class Main { public static void main(String[] args){ Print p = new ProxyPrinter(new Printer());//这里用了向上转型 p.print(); } } 打印前。。。 打印中。。。 打印后。。。 动态代理 和静态代理相比，创建接口、创建真实的被代理类都不变。</description>
+    </item>
+    
   </channel>
 </rss>

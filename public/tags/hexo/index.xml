@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hexo on Classic</title>
+    <link>https://gaoxinlxl.github.io/tags/hexo/</link>
+    <description>Recent content in Hexo on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/hexo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hexo体验</title>
+      <link>https://gaoxinlxl.github.io/post/2019/11/04/hexo%E4%BD%93%E9%AA%8C/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2019/11/04/hexo%E4%BD%93%E9%AA%8C/</guid>
+      <description>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。
+Markdown常用语法 Markdown是一种可以使用普通文本编辑器编写的标记语言，通过简单的标记语法，它可以使普通文本内容具有一定的格式。
+标题 通过#来设置，不同数量的#代表不同等级的标题
+例：
+# 一级标题## 二级标题### 三级标题 字体 加粗，左右分别用**包裹
+斜体，左右分别用*包裹
+删除线，左右分别用~~包裹
+例：
+**hello world***hello world*~~hello world~~ 效果：
+hello world
+hello world
+hello world
+引用 在被引语句前加&amp;gt;即可
+例：
+&amp;gt;我一直急速前行，穿梭于人人之间，试图借应接不暇的风景让我褪去对你的思念 我一直急速前行，穿梭于人人之间，试图借应接不暇的风景让我褪去对你的思念
+分割线 三个或三个以上的-或*就行
+例：
+--- *************** 图片 语法：
+![图片alt](url) 例：
+![紫色韵味](https://i.loli.net/2019/11/04/gR9Xdwo2JLETxIn.jpg) 注意：所要插入图片的地址来源，建议采用图床方式（下文介绍）。
+超链接 语法：
+[title](url)title可加可不加 例：
+[百度](https://www.baidu.com/) 效果：
+百度
+列表 无序列表，- 空格内容 有序列表，数字. 空格 内容 例：
+- 嗯- 啊 1.嗯2.</description>
+    </item>
+    
+  </channel>
+</rss>

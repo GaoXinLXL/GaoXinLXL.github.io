@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>点云 on Classic</title>
+    <link>https://gaoxinlxl.github.io/tags/%E7%82%B9%E4%BA%91/</link>
+    <description>Recent content in 点云 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Nov 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/%E7%82%B9%E4%BA%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PointNet阅读笔记</title>
+      <link>https://gaoxinlxl.github.io/post/2019/11/11/pointnet%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 11 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2019/11/11/pointnet%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</guid>
+      <description>论文链接：http://stanford.edu/~rqi/pointnet/
+项目地址：https://github.com/charlesq34/pointnet
+点云3大特征问题 无序性：点云数据是一个集合，对数据的输入顺序是不敏感的。
+点与点之间的空间关系
+不变性：点云整体空间变换不改变性质，例如旋转和平移。
+PointNet模型 输入为一帧的全部点云数据的集合，表示为一个nx3的2d tensor，其中n代表点云数量，3对应xyz坐标。 输入数据先通过一个 T-Net学习到的转换矩阵相乘来对齐，保证了模型对特定空间转换的不变性。 通过多次mlp对各点云数据进行特征提取后，再用一个T-Net对特征进行对齐，之后再进行mpl。 在特征的各个维度上执行maxpooling操作来得到最终的全局特征。 对分类任务，将全局特征通过mpl来预测最后的分类分数；对分割任务，将全局特征和之前学习到的各点云的局部特征进行串联，再通过mlp得到每个数据点的分类结果。 解决三大特性问题 max-pooling：作为对称函数来解决无序性
+将局部特征和全局特征进行串联来聚合信息
+两个联合的对齐网络，用来对齐输入的点和点特征来解决不变性
+分类网络 第一个变换网络输入未处理的点云，输出回归3x3矩阵 第二个变换网络输出64x64矩阵 注意：这里的变换网络就是T-Net 分割网络 分割网络是分类网络的一个延伸
+局部点特征（应用第二个变换网络后的结果）和全局特征（max-pooling的输出）按每个点级联。
+一些概念 有多少个卷积核，就有多少个feature map
+池化也叫下采样（池化作用：减少参数量，防止过拟合，为卷积神经网络带来平移不变性）
+激活函数多用ReLu函数（不再是Sigmoid、tanh激活函数，会造成梯度消失）</description>
+    </item>
+    
+  </channel>
+</rss>

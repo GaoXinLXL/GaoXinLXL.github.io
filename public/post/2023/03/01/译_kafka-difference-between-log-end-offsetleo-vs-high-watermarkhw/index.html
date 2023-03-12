@@ -78,7 +78,7 @@
 <p>让我们从Google上能够找到的一个最流行的<code>watermark</code>定义开始吧。</p>
 <p>“HW就是被成功复制到所有日志副本的那个最后一个消息的位移。”</p>
 <p>对于上述定义我是不太信服的，经过更深层次的探索，我发现了如下图片：</p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/6eaed92f7c25ac46ca42453a00b72f43.png" alt="https://i.imgtg.com/2023/03/01/VZUjP.png"></p>
+<p><img src="https://s2.loli.net/2023/03/09/Qk7vVaUtiuzGdmS.png" alt="image.png"></p>
 <p>这出现了什么问题？图片最右边的<code>stuck follower</code> 并没有收到第4条消息。也许在google找到的第一个定义并不完备，作者想表达的实际意图是：“HW是被成功复制到所有ISR的最后一条消息的位移”。</p>
 <p>在本能指引下，我发现了这篇<a href="https://rongxinblog.wordpress.com/2016/07/29/kafka-high-watermark/">文章</a>，提供了<code>watermark</code> 在代码中如何被计算的细节。</p>
 <p>我发现文章中的<code>watermark</code> 被定义的更加精确：</p>

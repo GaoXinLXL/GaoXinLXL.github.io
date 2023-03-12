@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>MATLAB学习 | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MATLAB学习</span></h1>
+
+<h2 class="date">2019/09/19</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/matlab">MATLAB</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <blockquote>
+<p>MATLAB的名称源自<code>Matrix Laboratory</code>，它是一种科学计算软件，专门以矩阵的形式处理数据。</p>
+</blockquote>
+<p>大二测绘系开设过matlab课程，除了认真上过第一节课，就再也没学了，哪怕是最后的期末作业，都是抄的。当然也就完全体会不到matlab的用处，对它的认识仅仅停留在“matlab”的六个字母上。三年后（2019-9-19），体验了下数学建模，负责编程任务，又重新学习了一下matlab的基本语法。</p>
+<h1 id="基本操作-基本操作基本操作"><a href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C" title="基本操作"></a>基本操作</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>clear y 将变量y从变量空间中去掉
+</span></span><span style="display:flex;"><span>clear 将所有变量清空
+</span></span><span style="display:flex;"><span>clc 仅仅是清空屏幕
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 注释</span>
+</span></span><span style="display:flex;"><span>ctrl<span style="color:#f92672">+</span>R 批量注释
+</span></span><span style="display:flex;"><span>ctrl<span style="color:#f92672">+</span>T 批量取消注释
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>disp（）：屏幕打印
+</span></span><span style="display:flex;"><span>input（）：输入函数
+</span></span><span style="display:flex;"><span>strcat（）：合并字符串
+</span></span><span style="display:flex;"><span>num2str（）：数字<span style="color:#f92672">-&gt;</span>字符串
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>linspace(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">5</span>) 产生从<span style="color:#ae81ff">0</span>到<span style="color:#ae81ff">2</span>的均匀的<span style="color:#ae81ff">5</span>个点
+</span></span><span style="display:flex;"><span>zeros(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>) 初始化<span style="color:#ae81ff">2</span>行<span style="color:#ae81ff">3</span>列全为<span style="color:#ae81ff">0</span>的矩阵
+</span></span><span style="display:flex;"><span>ones(<span style="color:#ae81ff">2</span>) 初始化全为<span style="color:#ae81ff">1</span>的<span style="color:#ae81ff">2</span>阶的矩阵
+</span></span><span style="display:flex;"><span>eye(<span style="color:#ae81ff">2</span>) 初始化<span style="color:#ae81ff">2</span>阶单位阵
+</span></span><span style="display:flex;"><span>Inf 无穷大
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>F = A<span style="color:#f92672">.*</span>B 点乘，对应位置相乘，区别于矩阵乘法
+</span></span><span style="display:flex;"><span>F = A<span style="color:#f92672">./</span>B 点除，对应位置相除
+</span></span><span style="display:flex;"><span>F = A<span style="color:#f92672">/</span>B = A <span style="color:#f92672">*</span> B^<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> ，就是A<span style="color:#f92672">*</span>B的逆
+</span></span><span style="display:flex;"><span>F = A^<span style="color:#ae81ff">2</span> = A<span style="color:#f92672">*</span>A
+</span></span><span style="display:flex;"><span>F = A<span style="color:#f92672">.^</span><span style="color:#ae81ff">2</span> = A<span style="color:#f92672">.*</span>A
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>x = A(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">3</span>) 取A矩阵的第<span style="color:#ae81ff">1</span>行<span style="color:#ae81ff">3</span>列
+</span></span><span style="display:flex;"><span>y = A(<span style="color:#ae81ff">2</span>,:) 相当于 y = A(<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span>) 取第二行
+</span></span><span style="display:flex;"><span>Z = A(<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span>) 前<span style="color:#ae81ff">2</span>行前<span style="color:#ae81ff">3</span>列
+</span></span><span style="display:flex;"><span>A([<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">5</span>],:) 只取第<span style="color:#ae81ff">2</span>和第<span style="color:#ae81ff">5</span>行
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">10</span>👎<span style="color:#ae81ff">1</span> 从<span style="color:#ae81ff">10</span>到<span style="color:#ae81ff">1</span>，公差为<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>A(<span style="color:#ae81ff">2</span>:<span style="color:#66d9ef">end</span>,:) 取第<span style="color:#ae81ff">2</span>行到最后一行
+</span></span><span style="display:flex;"><span>A(<span style="color:#ae81ff">2</span>:<span style="color:#66d9ef">end</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,:) 取第<span style="color:#ae81ff">2</span>行到倒数第<span style="color:#ae81ff">2</span>行
+</span></span><span style="display:flex;"><span>A(:) 取全部元素，输出的是一个列向量
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>A(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">3</span>) = <span style="color:#ae81ff">0</span> 将<span style="color:#ae81ff">0</span>赋值给<span style="color:#ae81ff">1</span>行<span style="color:#ae81ff">3</span>列
+</span></span><span style="display:flex;"><span>A(<span style="color:#ae81ff">2</span>,:) = [<span style="color:#ae81ff">6</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">4</span>] 整行的赋值
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>size（）：求矩阵的大小，几行几列
+</span></span><span style="display:flex;"><span>[r,c] = size(A) 将A的行、列数分别赋值给r、c
+</span></span><span style="display:flex;"><span>r = size(A,<span style="color:#ae81ff">1</span>) 只返回行数
+</span></span><span style="display:flex;"><span>c = size(A,<span style="color:#ae81ff">2</span>) 只返回列数
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>B = repmat(A,m,n) 将A复制m<span style="color:#f92672">*</span>n块
+</span></span><span style="display:flex;"><span>inv(B) 求B的逆矩阵
+</span></span><span style="display:flex;"><span>prod(A) 按列相乘
+</span></span><span style="display:flex;"><span>prod(A,<span style="color:#ae81ff">2</span>) 按行相乘
+</span></span><span style="display:flex;"><span>E = eig(A) A的全部特征值，组成向量E
+</span></span><span style="display:flex;"><span>[V,D] = eig(A) A的全部特征值，构成对角阵D，且A的特征值构成V的列向量
+</span></span></code></pre></div><h1 id="比较和逻辑运算-比较和逻辑运算比较和逻辑运算"><a href="#%E6%AF%94%E8%BE%83%E5%92%8C%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97" title="比较和逻辑运算"></a>比较和逻辑运算</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> x = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span>];
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">9</span>];
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> eq = (x<span style="color:#f92672">==</span>y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>eq =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">1</span>×<span style="color:#ae81ff">9</span> logical 数组
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> xy = (x<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">5</span>)<span style="color:#f92672">&amp;</span>(y<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>xy =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">1</span>×<span style="color:#ae81ff">9</span> logical 数组
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> xoy = (x<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">5</span>)<span style="color:#f92672">|</span>(y<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>xoy =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">1</span>×<span style="color:#ae81ff">9</span> logical 数组
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">1</span>   <span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">% 把x里小于0的都改为0，省的写for循环</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> x = [<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">6</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span>];
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> x(x<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">0</span>) = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">3</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">9</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">% 第2行赋值为0</span>
+</span></span><span style="display:flex;"><span>y =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y(<span style="color:#ae81ff">2</span>,:)=<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">% 先找到第一列中小于0的，再把那一行都设为0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>;<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span>;<span style="color:#ae81ff">7</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y(y(:,<span style="color:#ae81ff">1</span>)<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">0</span>,:)=<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span></code></pre></div><h1 id="数组操作函数-数组操作函数数组操作函数"><a href="#%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E5%87%BD%E6%95%B0" title="数组操作函数"></a>数组操作函数</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>flipud（）：行逆序排列
+</span></span><span style="display:flex;"><span>fliplr（）：列逆序排列
+</span></span><span style="display:flex;"><span>rot90（）：逆时针<span style="color:#ae81ff">90</span>°旋转
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> A = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>;<span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span>;<span style="color:#ae81ff">7</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>A =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">4</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> B = flipud(A)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>B =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">4</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> C = fliplr(A)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>C =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">3</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">6</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">9</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> D = rot90(A)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>D =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">3</span>     <span style="color:#ae81ff">6</span>     <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">4</span>     <span style="color:#ae81ff">7</span>
+</span></span></code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>sum（）：求和函数
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> A = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>];
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> sum(A)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">6</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> B = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>;<span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span>;<span style="color:#ae81ff">7</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span>];
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> sum(B)    <span style="color:#75715e">% 相当于sum（B，1）,每列求和</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">12</span>    <span style="color:#ae81ff">15</span>    <span style="color:#ae81ff">18</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> sum(B,<span style="color:#ae81ff">2</span>)    <span style="color:#75715e">% 每行求和</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">15</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">24</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> sum(B(:))    <span style="color:#75715e">% 所有总和</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">45</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> C = B(:)    <span style="color:#75715e">% 将B矩阵拉成1维向量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>C =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">6</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">9</span>
+</span></span></code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> A = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>];
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> max(A)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> max(A,<span style="color:#ae81ff">2</span>)    <span style="color:#75715e">% 跟2比较，取最大</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> B = [<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">9</span>;<span style="color:#ae81ff">4</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">6</span>];  <span style="color:#75715e">% 2维数组取最大，默认取每列最大</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> max(B)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">4</span>     <span style="color:#ae81ff">8</span>     <span style="color:#ae81ff">9</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> max(B,[],<span style="color:#ae81ff">2</span>) <span style="color:#75715e">% 按照行取最大值的格式</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ans =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">9</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">8</span>
+</span></span></code></pre></div><h1 id="常用数学函数-常用数学函数常用数学函数"><a href="#%E5%B8%B8%E7%94%A8%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0" title="常用数学函数"></a>常用数学函数</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>sin,cos,tan,cot,asin,acos,atan,acot
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> x = <span style="color:#ae81ff">0</span>:pi<span style="color:#f92672">/</span><span style="color:#ae81ff">6</span>:pi
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>         <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">0.5236</span>    <span style="color:#ae81ff">1.0472</span>    <span style="color:#ae81ff">1.5708</span>    <span style="color:#ae81ff">2.0944</span>    <span style="color:#ae81ff">2.6180</span>    <span style="color:#ae81ff">3.1416</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y = sin(x)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>         <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">0.5000</span>    <span style="color:#ae81ff">0.8660</span>    <span style="color:#ae81ff">1.0000</span>    <span style="color:#ae81ff">0.8660</span>    <span style="color:#ae81ff">0.5000</span>    <span style="color:#ae81ff">0.0000</span>
+</span></span></code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>abs（）：取绝对值
+</span></span><span style="display:flex;"><span>sqrt（）：开根号
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>ceil（）：向上取整
+</span></span><span style="display:flex;"><span>floor（）：向下取整
+</span></span><span style="display:flex;"><span>fix（）：向<span style="color:#ae81ff">0</span>靠取整
+</span></span><span style="display:flex;"><span>round（）：四舍五入取整
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>mod（）：取余
+</span></span></code></pre></div><h1 id="简单作图-简单作图简单作图"><a href="#%E7%AE%80%E5%8D%95%E4%BD%9C%E5%9B%BE" title="简单作图"></a>简单作图</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> x = <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>pi:<span style="color:#ae81ff">0.1</span>:<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>pi;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y1 = sin(x);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> y2 = cos(x);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> plot(x,y1,<span style="color:#e6db74">&#39;-b&#39;</span>);    <span style="color:#75715e">% 蓝色实线</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> hold on;    <span style="color:#75715e">% 避免下面的图覆盖掉上面的</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> plot(x,y2,<span style="color:#e6db74">&#39;-r&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> xlabel(<span style="color:#e6db74">&#39;x&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> ylabel(<span style="color:#e6db74">&#39;y&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> text(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>,<span style="color:#e6db74">&#39;(0,0)&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> legend(<span style="color:#e6db74">&#39;sin x&#39;</span>,<span style="color:#e6db74">&#39;cos x&#39;</span>);
+</span></span></code></pre></div><p><img src="https://i.loli.net/2019/11/05/bGEpKN8FActwvTY.png" alt="简单作图1.png"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> t = <span style="color:#ae81ff">0</span>:pi<span style="color:#f92672">/</span><span style="color:#ae81ff">180</span>:<span style="color:#ae81ff">4</span><span style="color:#f92672">*</span>pi;
+</span></span><span style="display:flex;"><span>x = <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span>sin(t)<span style="color:#f92672">.^</span><span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>y = <span style="color:#ae81ff">13</span><span style="color:#f92672">*</span>cos(t)<span style="color:#f92672">-</span><span style="color:#ae81ff">5</span><span style="color:#f92672">*</span>cos(<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>t)<span style="color:#75715e">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>cos(<span style="color:#ae81ff">3</span><span style="color:#f92672">*</span>t)<span style="color:#f92672">-</span>cos(<span style="color:#ae81ff">4</span><span style="color:#f92672">*</span>t);
+</span></span><span style="display:flex;"><span>plot(x<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>,y,<span style="color:#e6db74">&#39;-r&#39;</span>,x<span style="color:#f92672">+</span><span style="color:#ae81ff">3</span>,y,<span style="color:#e6db74">&#39;-b&#39;</span>);
+</span></span><span style="display:flex;"><span>xlabel(<span style="color:#e6db74">&#39;x&#39;</span>);
+</span></span><span style="display:flex;"><span>ylabel(<span style="color:#e6db74">&#39;y&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> axis([<span style="color:#f92672">-</span><span style="color:#ae81ff">20</span>,<span style="color:#ae81ff">20</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">20</span>,<span style="color:#ae81ff">15</span>]); <span style="color:#75715e">% X、Y轴范围分别是[-20,20]、[-20、15]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> title(<span style="color:#e6db74">&#39;Two Heart&#39;</span>);;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> legend(<span style="color:#e6db74">&#39;U&#39;</span>,<span style="color:#e6db74">&#39;I&#39;</span>);
+</span></span></code></pre></div><p><img src="https://i.loli.net/2019/11/05/vc2Rdq9EKlSaLZJ.png" alt="简单作图2.png"></p>
+<h1 id="3维作图-3维作图3维作图"><a href="#3%E7%BB%B4%E4%BD%9C%E5%9B%BE" title="3维作图"></a>3维作图</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> t = <span style="color:#ae81ff">0</span>:pi<span style="color:#f92672">/</span><span style="color:#ae81ff">50</span>:<span style="color:#ae81ff">10</span><span style="color:#f92672">*</span>pi;
+</span></span><span style="display:flex;"><span>x = sin(t);
+</span></span><span style="display:flex;"><span>y = cos(t);
+</span></span><span style="display:flex;"><span>z = t;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> plot3(x,y,z); <span style="color:#75715e">% 3维作图</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> title(<span style="color:#e6db74">&#39;Helix&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> xlabel(<span style="color:#e6db74">&#39;sin t&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> ylabel(<span style="color:#e6db74">&#39;cos t&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> zlabel(<span style="color:#e6db74">&#39;t&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> grid on;    <span style="color:#75715e">% 加网格线</span>
+</span></span></code></pre></div><p><img src="https://i.loli.net/2019/11/05/kKHt139zIDupEvs.png" alt="3维作图.png"></p>
+<hr>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span>meshgrid（）：生成格网采样点
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> [x,y] = meshgrid(<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y =
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">1</span>     <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">2</span>     <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">3</span>     <span style="color:#ae81ff">3</span>     <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">% 下图为此函数生成的格网点</span>
+</span></span></code></pre></div><p><img src="https://i.loli.net/2019/11/05/bCHnFdloh5Kif3J.png" alt="meshgrid格网点.png"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> [x,y] = meshgrid(<span style="color:#f92672">-</span>pi:<span style="color:#ae81ff">0.1</span>:pi);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> z = sin(x)<span style="color:#f92672">.*</span>cos(y);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> mesh(x,y,z);    <span style="color:#75715e">% 绘制3维曲面</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> surf(x,y,z); <span style="color:#75715e">% 3维着色</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> xlabel(<span style="color:#e6db74">&#39;x&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> ylabel(<span style="color:#e6db74">&#39;y&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> zlabel(<span style="color:#e6db74">&#39;z&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> title(<span style="color:#e6db74">&#39;sin x sin y&#39;</span>);
+</span></span></code></pre></div><p><img src="https://i.loli.net/2019/11/05/M36sh7rfcCTFtDK.png" alt="结合meshgrid3维作图.png"></p>
+<h1 id="m函数格式-m函数格式m函数格式"><a href="#M%E5%87%BD%E6%95%B0%E6%A0%BC%E5%BC%8F" title="M函数格式"></a>M函数格式</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">% 求矩形面积</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> area = <span style="color:#a6e22e">rectarea</span>(L,W)
+</span></span><span style="display:flex;"><span>area = L<span style="color:#f92672">.*</span>W
+</span></span></code></pre></div>
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

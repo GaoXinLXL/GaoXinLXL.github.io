@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hadoop on Classic</title>
+    <link>https://gaoxinlxl.github.io/tags/hadoop/</link>
+    <description>Recent content in Hadoop on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 25 May 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/hadoop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hadoop之WordCount&#43;InvertedIndex&#43;PageRank&#43;DataDeduplication&#43;TopN</title>
+      <link>https://gaoxinlxl.github.io/post/2020/05/25/hadoop%E4%B9%8Bwordcount-invertedindex-pagerank-datadeduplication-topn/</link>
+      <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2020/05/25/hadoop%E4%B9%8Bwordcount-invertedindex-pagerank-datadeduplication-topn/</guid>
+      <description>WordCount（词频统计）就像是编程世界的Hello World程序，新手必备。另外几个经典的算法：倒排索引、页面排序、数据去重、TopN等一并记录如下。
+WordCount 词频统计是MapRedurce编程的一个经典案例
+继承Mapper类 public class WordCountMapper extends Mapper&amp;lt;LongWritable, Text,Text, IntWritable&amp;gt;{ Text k = new Text(); IntWritable v = new IntWritable(1); @Override protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { String line = value.toString(); String[] words = line.split(&amp;#34; &amp;#34;); for(String word : words){ k.set(word); context.write(k,v); } } } 继承Reducer类 public class WordCountReducer extends Reducer&amp;lt;Text, IntWritable,Text,IntWritable&amp;gt; { IntWritable v = new IntWritable(); @Override protected void reduce(Text key, Iterable&amp;lt;IntWritable&amp;gt; values, Context context) throws IOException, InterruptedException { //局部汇总 int count = 0; for(IntWritable value : values){ count += value.</description>
+    </item>
+    
+  </channel>
+</rss>

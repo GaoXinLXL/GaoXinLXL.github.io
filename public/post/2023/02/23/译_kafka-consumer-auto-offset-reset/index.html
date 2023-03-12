@@ -105,12 +105,12 @@
 </table>
 <p>一旦消费者组写入了位移，则该配置不再生效。如果消费者组中的消费者被停止然后重新启动，他们将从最后一个偏移量开始消费。</p>
 <h1 id="earliest的作用">Earliest的作用</h1>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/b09ec909a2561ca5922297e02041610b.png" alt="https://i.imgtg.com/2023/02/23/sEClx.png"></p>
+<p><img src="https://s2.loli.net/2023/03/09/OUjVwpKyn2lQmhF.png" alt="image.png"></p>
 <p>将新消费者配置为<code>auto.offset.reset: earliest</code> 将导致它消费分区上的所有内容。在以下示例中，分区有两条消息“foo”和“bar”，这些消息将被使用：</p>
 <p>当然，分区上可能包含数百万条信息，所有要确保明白数据量以及系统不被压垮。这些消息可以追溯到数周或数月之前，也可以追溯到系统的开始，具体取决于主题的保留期限。<code>retention.ms</code> 设置为 -1 意味着不会丢弃任何旧消息，因此将轮询所有消息。</p>
 <h1 id="latest的作用">Latest的作用</h1>
 <p>将新消费者配置为 <code>auto.offset.reset: latest</code> 将导致它仅消费写入分区的新消息。在上述场景中，仅会消费偏移量 (3) 的新消息。已经存在的消息“foo”和“bar”将会被跳过。</p>
-<p><img src="https://img-blog.csdnimg.cn/img_convert/dc1500b70e2f3660c20cc7b7ace2b115.png" alt="https://i.imgtg.com/2023/02/23/sGK9B.png"></p>
+<p><img src="https://s2.loli.net/2023/03/09/xdaUGMX7ZzrkH29.png" alt="image.png"></p>
 <p>消费者是否应该配置为跳过现有消息应然取决于需求。</p>
 <h1 id="数据丢失风险">数据丢失风险</h1>
 <p>存在一种极端场景会导致数据的丢失，导致在可重试的异常情况下不会重新传递消息。此场景适用于尚未记录任何当前偏移量（或偏移量已被删除）的新消费者组。</p>

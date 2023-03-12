@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C# on Classic</title>
+    <link>https://gaoxinlxl.github.io/tags/c#/</link>
+    <description>Recent content in C# on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 12 Sep 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/c#/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spire.Doc在Word上的简单应用</title>
+      <link>https://gaoxinlxl.github.io/post/2019/09/12/spire.doc%E5%9C%A8word%E4%B8%8A%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Thu, 12 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gaoxinlxl.github.io/post/2019/09/12/spire.doc%E5%9C%A8word%E4%B8%8A%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</guid>
+      <description>一位同学让帮忙做个小功能：提前在word上建立模板，程序运行后直接输出到对应位置，避免手动输入数据。
+效果如下 程序使用前须知 提前建立两个word文件，其中一个作为模板，另一个作为结果展示文件
+模板里面可以绘制表格，表格中对结果部分使用占位符，如图所示：
+在程序运行后，另一个word就会展示如上面结果展示中的结果
+还有很多对word的操作，可自行网上搜索Spire
+准备操作 工具 C# Spire.Doc for .NET Spire简介 Spire.Doc for .NET是一款由E-iceblue公司开发的专业的Word .NET类库，使用该工具开发人员可以在任意.NET平台（C#，VB.NET，ASP.NET）上快速创建，读取，写入，转换，打印Word文档。
+简而言之，利用Spire来快速实现需求
+那Spire从官网下载速度有点慢
+Spire的具体使用 在解决方案资源管理器里，引用添加就行
+然后在代码开头引入命名空间就完成准备工作了
+代码实现 搞个button来写
+搞个例子试试：
+using Spire.Doc; using System; using System.Collections.Generic; using System.ComponentModel; using System.Data; using System.Drawing; using System.Linq; using System.Text; using System.Threading.Tasks; using System.Windows.Forms; namespace WindowsFormsApplication1 { public partial class Form1 : Form { public Form1() { InitializeComponent(); } private void button1_Click(object sender, EventArgs e) { int i = 2; double a, b, x,y; a = 1.</description>
+    </item>
+    
+  </channel>
+</rss>

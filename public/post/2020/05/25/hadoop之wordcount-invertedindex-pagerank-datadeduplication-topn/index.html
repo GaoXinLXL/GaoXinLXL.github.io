@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A simple, minimal blog for those who love text.">
+    <title>Hadoop之WordCount&#43;InvertedIndex&#43;PageRank&#43;DataDeduplication&#43;TopN | Classic</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="https://gaoxinlxl.github.io/css/theme-override.css">
+    <header>
+
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="https://gaoxinlxl.github.io/">~/classic</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/categories</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/tags/">~/tags</a>
+      </li>
+      
+
+      
+      
+      <li class="pull-right">
+        <a href="/index.xml">~/subscribe</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Hadoop之WordCount+InvertedIndex+PageRank+DataDeduplication+TopN</span></h1>
+
+<h2 class="date">2020/05/25</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a> 
+  
+  
+  
+  Tags: <a href="/tags/hadoop">Hadoop</a> 
+  
+  
+</p>
+</div>
+
+
+<div class="content-wrapper">
+  <main>
+    <blockquote>
+<p>WordCount（词频统计）就像是编程世界的Hello World程序，新手必备。另外几个经典的算法：倒排索引、页面排序、数据去重、TopN等一并记录如下。</p>
+</blockquote>
+<h1 id="wordcount">WordCount</h1>
+<blockquote>
+<p>词频统计是MapRedurce编程的一个经典案例</p>
+</blockquote>
+<h1 id="继承mapper类-继承mapper类继承mapper类"><a href="#%E7%BB%A7%E6%89%BFMapper%E7%B1%BB" title="继承Mapper类"></a>继承Mapper类</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WordCountMapper</span> <span style="color:#66d9ef">extends</span> Mapper<span style="color:#f92672">&lt;</span>LongWritable<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span> IntWritable<span style="color:#f92672">&gt;{</span>
+</span></span><span style="display:flex;"><span>    Text k <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    IntWritable v <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> IntWritable<span style="color:#f92672">(</span><span style="color:#ae81ff">1</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>LongWritable key<span style="color:#f92672">,</span> Text value<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        String line <span style="color:#f92672">=</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> words <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>String word <span style="color:#f92672">:</span> words<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            k<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>word<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>k<span style="color:#f92672">,</span>v<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="继承reducer类-继承reducer类继承reducer类"><a href="#%E7%BB%A7%E6%89%BFReducer%E7%B1%BB" title="继承Reducer类"></a>继承Reducer类</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WordCountReducer</span> <span style="color:#66d9ef">extends</span> Reducer<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">,</span> IntWritable<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>IntWritable<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    IntWritable v <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> IntWritable<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reduce</span><span style="color:#f92672">(</span>Text key<span style="color:#f92672">,</span> Iterable<span style="color:#f92672">&lt;</span>IntWritable<span style="color:#f92672">&gt;</span> values<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//局部汇总
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>IntWritable value <span style="color:#f92672">:</span> values<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            count <span style="color:#f92672">+=</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        v<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>count<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span>v<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="编写驱动类-编写驱动类编写驱动类"><a href="#%E7%BC%96%E5%86%99%E9%A9%B1%E5%8A%A8%E7%B1%BB" title="编写驱动类"></a>编写驱动类</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WordCountDriver</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> ClassNotFoundException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//通过Job来封装本次MR信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Configuration conf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configuration<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        Job job <span style="color:#f92672">=</span> Job<span style="color:#f92672">.</span><span style="color:#a6e22e">getInstance</span><span style="color:#f92672">(</span>conf<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//指定驱动类、Mapper类、Reducer类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setJarByClass</span><span style="color:#f92672">(</span>WordCountDriver<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setMapperClass</span><span style="color:#f92672">(</span>WordCountMapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setReducerClass</span><span style="color:#f92672">(</span>WordCountReducer<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//指定Mapper类的输出KV类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setMapOutputKeyClass</span><span style="color:#f92672">(</span>Text<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setMapOutputValueClass</span><span style="color:#f92672">(</span>IntWritable<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//指定Reducer类的输出KV类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setOutputKeyClass</span><span style="color:#f92672">(</span>Text<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        job<span style="color:#f92672">.</span><span style="color:#a6e22e">setOutputValueClass</span><span style="color:#f92672">(</span>IntWritable<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//设置输入、输出路径
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        FileInputFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">setInputPaths</span><span style="color:#f92672">(</span>job<span style="color:#f92672">,</span><span style="color:#66d9ef">new</span> Path<span style="color:#f92672">(</span>args<span style="color:#f92672">[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">]));</span>
+</span></span><span style="display:flex;"><span>        FileOutputFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">setOutputPath</span><span style="color:#f92672">(</span>job<span style="color:#f92672">,</span><span style="color:#66d9ef">new</span> Path<span style="color:#f92672">(</span>args<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//提交Job
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">boolean</span> result <span style="color:#f92672">=</span> job<span style="color:#f92672">.</span><span style="color:#a6e22e">waitForCompletion</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">exit</span><span style="color:#f92672">(</span>result <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="注意-注意注意"><a href="#%E6%B3%A8%E6%84%8F" title="注意"></a>注意</h1>
+<ol>
+<li>这里驱动类里的输入输出路径没有写死，可以带参运行。</li>
+<li>Map类里的一点细节，尽量不要在map方法里反复创建对象。</li>
+</ol>
+<h1 id="invertedindex">InvertedIndex</h1>
+<blockquote>
+<p>倒排索引，简单地说就是：根据内容查文档，而不是根据文档查内容。</p>
+</blockquote>
+<h1 id="案例需求-案例需求案例需求"><a href="#%E6%A1%88%E4%BE%8B%E9%9C%80%E6%B1%82" title="案例需求"></a>案例需求</h1>
+<h2 id="输入-输入输入"><a href="#%E8%BE%93%E5%85%A5" title="输入"></a>输入</h2>
+<p>假设有三个txt文件，内容举例如下：</p>
+<p>1.txt</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>a b c
+</span></span><span style="display:flex;"><span>a b b b b
+</span></span><span style="display:flex;"><span>hello world
+</span></span><span style="display:flex;"><span>hello b
+</span></span></code></pre></div><p>其他文件内容类似</p>
+<h2 id="输出-输出输出"><a href="#%E8%BE%93%E5%87%BA" title="输出"></a>输出</h2>
+<p>要求输出文件的内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>a    <span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">;</span><span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>b    <span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span><span style="color:#ae81ff">3.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">6</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>c    <span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span><span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>d    <span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>hello    <span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">;</span><span style="color:#ae81ff">3.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>j    <span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>s    <span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>world    <span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
+</span></span></code></pre></div><h2 id="分析-分析分析"><a href="#%E5%88%86%E6%9E%90" title="分析"></a>分析</h2>
+<ol>
+<li>Map拿到手的内容举例如下：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">0</span><span style="color:#f92672">,</span><span style="color:#e6db74">&#34;a b c&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><p>Map输出的内容形式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>a<span style="color:#f92672">:</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">,</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>a<span style="color:#f92672">:</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">,</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>b<span style="color:#f92672">:</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">,</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><ol start="2">
+<li>经过Map之后，单纯依靠后面的Reduce阶段，不能同时完成词频统计和生成文档列表，所以必须增加一次Combine阶段</li>
+</ol>
+<p>Combine拿到的内容形式上就是Map输出的内容，Combine的输出内容形式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>a<span style="color:#f92672">,</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>b<span style="color:#f92672">,</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><p>其他文档的内容类似，里面也可能含有a、b等。</p>
+<ol start="3">
+<li>Reduce阶段就只需将文件中相同key的value进行统计，组合成文档名加词频的形式就行</li>
+</ol>
+<p>Reduce接收的内容形如Combine输出的内容，它输出内容的kv形式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>a<span style="color:#f92672">,</span><span style="color:#ae81ff">1.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">2</span><span style="color:#f92672">;</span><span style="color:#ae81ff">2.</span>txt<span style="color:#f92672">:</span><span style="color:#ae81ff">3</span><span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><h1 id="编程实现-编程实现编程实现"><a href="#%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0" title="编程实现"></a>编程实现</h1>
+<h2 id="map-mapmap"><a href="#Map" title="Map"></a>Map</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.InvertedIndex<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.LongWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Mapper<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.lib.input.FileSplit<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.StringTokenizer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">InvertedIndexMapper</span> <span style="color:#66d9ef">extends</span> Mapper<span style="color:#f92672">&lt;</span>LongWritable<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//存储单词和文档名称
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Text keyInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//存储词频，初始化为1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> Text valueInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>LongWritable key<span style="color:#f92672">,</span> Text value<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//得到这行数据所在的文件分片
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        FileSplit fileSplit <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>FileSplit<span style="color:#f92672">)</span>context<span style="color:#f92672">.</span><span style="color:#a6e22e">getInputSplit</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//根据文件切片得到文件名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        String fileName <span style="color:#f92672">=</span> fileSplit<span style="color:#f92672">.</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        StringTokenizer itr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringTokenizer<span style="color:#f92672">(</span>value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>itr<span style="color:#f92672">.</span><span style="color:#a6e22e">hasMoreTokens</span><span style="color:#f92672">()){</span>
+</span></span><span style="display:flex;"><span>            keyInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>itr<span style="color:#f92672">.</span><span style="color:#a6e22e">nextToken</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#f92672">+</span>fileName<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>keyInfo<span style="color:#f92672">,</span>valueInfo<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="combine-combinecombine"><a href="#Combine" title="Combine"></a>Combine</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.InvertedIndex<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Reducer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">InvertedIndexCombiner</span> <span style="color:#66d9ef">extends</span> Reducer<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Text keyInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Text valueInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reduce</span><span style="color:#f92672">(</span>Text key<span style="color:#f92672">,</span> Iterable<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">&gt;</span> values<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span><span style="color:#75715e">//词频统计
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>Text value <span style="color:#f92672">:</span> values<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            sum <span style="color:#f92672">+=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> splitIndex <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">indexOf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//重新设置key为单词
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        keyInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span><span style="color:#ae81ff">0</span><span style="color:#f92672">,</span>splitIndex<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//重新设置value为文档名加词频
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        valueInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>splitIndex<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#f92672">)+</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#f92672">+</span>sum<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>keyInfo<span style="color:#f92672">,</span>valueInfo<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="reduce-reducereduce"><a href="#Reduce" title="Reduce"></a>Reduce</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.InvertedIndex<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Reducer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">InvertedIndexReducer</span> <span style="color:#66d9ef">extends</span> Reducer<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Text valueInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reduce</span><span style="color:#f92672">(</span>Text key<span style="color:#f92672">,</span> Iterable<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">&gt;</span> values<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//生成文档列表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        String fileList <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>Text value <span style="color:#f92672">:</span> values<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            fileList <span style="color:#f92672">+=</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">()+</span><span style="color:#e6db74">&#34;;&#34;</span><span style="color:#f92672">;</span><span style="color:#75715e">//注意这是分号，记录了单词所属的那些文档
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        valueInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>fileList<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span>valueInfo<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="易错点-易错点易错点"><a href="#%E6%98%93%E9%94%99%E7%82%B9" title="易错点"></a>易错点</h1>
+<ol>
+<li>各个阶段的KV类型一定要小心，没什么特别要求的话，可以统一为Text类型。这样后面的Driver类也可以简写。</li>
+<li>在设置各个阶段的输出内容，也就是KV值时，为了防止出错，应该预先创建要输出的key对象和value对象，而不应该直接对本阶段输入的key对象进行处理，否则容易造成逻辑错误。（这是一次教训，就因为设置kv，造成了逻辑错误，程序运行结束，只有输出文件包，但没有结果文件，查了一个多小时的错。）</li>
+<li>分割字符串时，可以考虑用StringTokenizer类。</li>
+</ol>
+<h1 id="pagerank">PageRank</h1>
+<blockquote>
+<p>PageRank，网页排名，是Google专有的算法，用于衡量特定网页相对于搜索引擎索引中的其他网页而言的重要程度。</p>
+</blockquote>
+<h1 id="原图-原图原图"><a href="#%E5%8E%9F%E5%9B%BE" title="原图"></a>原图</h1>
+<p><img src="https://i.loli.net/2020/05/28/FpN4RVG7UmXAyZJ.png" alt="20160514130534469.png"></p>
+<h1 id="设计数据存储格式-设计数据存储格式设计数据存储格式"><a href="#%E8%AE%BE%E8%AE%A1%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F" title="设计数据存储格式"></a>设计数据存储格式</h1>
+<h2 id="输入-输入输入-1"><a href="#%E8%BE%93%E5%85%A5" title="输入"></a>输入</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>A <span style="color:#ae81ff">0.25</span> B C D
+</span></span><span style="display:flex;"><span>B <span style="color:#ae81ff">0.25</span> A D
+</span></span><span style="display:flex;"><span>C <span style="color:#ae81ff">0.25</span> C
+</span></span><span style="display:flex;"><span>D <span style="color:#ae81ff">0.25</span> B C
+</span></span></code></pre></div><ul>
+<li>第一列代表当前网页</li>
+<li>第二列代表当前网页PR值</li>
+<li>之后的字母代表当前网页指向的链接网页</li>
+<li>字符之间用一个空格隔开</li>
+</ul>
+<h2 id="输出-输出输出-1"><a href="#%E8%BE%93%E5%87%BA" title="输出"></a>输出</h2>
+<p>因为PageRank算法需要迭代计算，所以输出格式应与输入格式保持一致。</p>
+<h1 id="mapreduce编程实现-mapreduce编程实现mapreduce编程实现"><a href="#MapReduce%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0" title="MapReduce编程实现"></a>MapReduce编程实现</h1>
+<h2 id="map阶段-map阶段map阶段"><a href="#Map%E9%98%B6%E6%AE%B5" title="Map阶段"></a>Map阶段</h2>
+<p>map得到的内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>A <span style="color:#ae81ff">0.25</span> B C D
+</span></span></code></pre></div><p>这里面有三类信息：</p>
+<ol>
+<li>当前网页名，A</li>
+<li>A当前的PR值，0.25</li>
+<li>A指向的链接网页，B、C、D</li>
+</ol>
+<p>map的输出内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>A <span style="color:#a6e22e">@B</span> C D
+</span></span><span style="display:flex;"><span>B $0<span style="color:#ae81ff">.0833</span>
+</span></span><span style="display:flex;"><span>C $0<span style="color:#ae81ff">.0833</span>
+</span></span><span style="display:flex;"><span>D $0<span style="color:#ae81ff">.0833</span>
+</span></span></code></pre></div><p>map的输出有两类：</p>
+<ol>
+<li>继续保存当前网页的所有指向链接</li>
+<li>各个被指向链接从当前网页得到的PR值</li>
+</ol>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.pagerank<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.LongWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Mapper<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.StringTokenizer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PageRankMapper</span> <span style="color:#66d9ef">extends</span> Mapper<span style="color:#f92672">&lt;</span>LongWritable<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    Text keyInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    Text valueInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String id<span style="color:#f92672">;</span><span style="color:#75715e">//记录网页名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> pr<span style="color:#f92672">;</span><span style="color:#75715e">//网页PR值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span><span style="color:#75715e">//当前网页拥有的链接数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span> avg_pr<span style="color:#f92672">;</span><span style="color:#75715e">//当前网页分出去的平均PR值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span><span style="color:#75715e">//输入&lt;A,0.25 B C D&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>LongWritable key<span style="color:#f92672">,</span> Text value<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        StringTokenizer itr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringTokenizer<span style="color:#f92672">(</span>value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        id <span style="color:#f92672">=</span> itr<span style="color:#f92672">.</span><span style="color:#a6e22e">nextToken</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        pr <span style="color:#f92672">=</span> Float<span style="color:#f92672">.</span><span style="color:#a6e22e">parseFloat</span><span style="color:#f92672">(</span>itr<span style="color:#f92672">.</span><span style="color:#a6e22e">nextToken</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        count <span style="color:#f92672">=</span> itr<span style="color:#f92672">.</span><span style="color:#a6e22e">countTokens</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        avg_pr <span style="color:#f92672">=</span> pr<span style="color:#f92672">/</span>count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        String linkIds <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;@&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>itr<span style="color:#f92672">.</span><span style="color:#a6e22e">hasMoreTokens</span><span style="color:#f92672">()){</span>
+</span></span><span style="display:flex;"><span>            String linkId <span style="color:#f92672">=</span> itr<span style="color:#f92672">.</span><span style="color:#a6e22e">nextToken</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            keyInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>linkId<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            valueInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;$&#34;</span><span style="color:#f92672">+</span>avg_pr<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            linkIds <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">+</span> linkId<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>keyInfo<span style="color:#f92672">,</span>valueInfo<span style="color:#f92672">);</span><span style="color:#75715e">//第一种输出类型 &lt;B,$0.0833&gt;、&lt;C,$0.0833&gt;、&lt;D,$0.0833&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        keyInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>id<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        valueInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>linkIds<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>keyInfo<span style="color:#f92672">,</span>valueInfo<span style="color:#f92672">);</span><span style="color:#75715e">//第二种输出类型 &lt;A,@ B C D&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="reduce阶段-reduce阶段reduce阶段"><a href="#Reduce%E9%98%B6%E6%AE%B5" title="Reduce阶段"></a>Reduce阶段</h2>
+<p>从Map到Reduce，框架会自动将Key相同的Value合并</p>
+<p>所以Reduce得到的内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>A <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">@B</span> C D<span style="color:#f92672">,</span>$0<span style="color:#ae81ff">.125</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>B <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">@A</span> D<span style="color:#f92672">,</span>$0<span style="color:#ae81ff">.125</span><span style="color:#f92672">,</span>$0<span style="color:#ae81ff">.0833</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>Reduce阶段就做两件事;</p>
+<ol>
+<li>将以$开头的PR值进行求和计算，作为此次迭代的网页PR值</li>
+<li>拼接各类字符，组成和输入格式一样的字符串输出</li>
+</ol>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.pagerank<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Reducer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PageRankReducer</span> <span style="color:#66d9ef">extends</span> Reducer<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span> Text<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Text keyInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Text valueInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reduce</span><span style="color:#f92672">(</span>Text key<span style="color:#f92672">,</span> Iterable<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">&gt;</span> values<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">float</span> pr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        String link <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>Text value <span style="color:#f92672">:</span> values<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;$&#39;</span><span style="color:#f92672">==</span>value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span><span style="color:#ae81ff">0</span><span style="color:#f92672">)){</span><span style="color:#75715e">//以$开头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                pr <span style="color:#f92672">+=</span> Float<span style="color:#f92672">.</span><span style="color:#a6e22e">parseFloat</span><span style="color:#f92672">(</span>value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span><span style="color:#ae81ff">1</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span><span style="color:#75715e">//以@开头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                link <span style="color:#f92672">+=</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span><span style="color:#ae81ff">1</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        pr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8f</span> <span style="color:#f92672">*</span> pr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0.2f</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.25f</span><span style="color:#f92672">;</span><span style="color:#75715e">//加入跳转因子，进行平滑处理。最后的0.25f其实是网页总数分之一
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        keyInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        valueInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>pr<span style="color:#f92672">+</span>link<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>keyInfo<span style="color:#f92672">,</span>valueInfo<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="driver-driverdriver"><a href="#Driver" title="Driver"></a>Driver</h2>
+<p>驱动类都是套路，唯一要注意的就是，PageRank算法需要迭代，在驱动类里需要增加一个循环，一般迭代三四十次就收敛了。这里只迭代3次，简单表示一下。</p>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.pagerank<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.conf.Configuration<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.fs.Path<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Job<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PageRankDriver</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> ClassNotFoundException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        Configuration conf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configuration<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        String pathIn <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;F:\\hadooptemp\\input3&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        String pathOut <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;F:\\hadooptemp\\output3&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            Job job <span style="color:#f92672">=</span> Job<span style="color:#f92672">.</span><span style="color:#a6e22e">getInstance</span><span style="color:#f92672">(</span>conf<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            job<span style="color:#f92672">.</span><span style="color:#a6e22e">setJarByClass</span><span style="color:#f92672">(</span>PageRankDriver<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            job<span style="color:#f92672">.</span><span style="color:#a6e22e">setMapperClass</span><span style="color:#f92672">(</span>PageRankMapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            job<span style="color:#f92672">.</span><span style="color:#a6e22e">setReducerClass</span><span style="color:#f92672">(</span>PageRankReducer<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            job<span style="color:#f92672">.</span><span style="color:#a6e22e">setOutputKeyClass</span><span style="color:#f92672">(</span>Text<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            job<span style="color:#f92672">.</span><span style="color:#a6e22e">setOutputValueClass</span><span style="color:#f92672">(</span>Text<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            FileInputFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">setInputPaths</span><span style="color:#f92672">(</span>job<span style="color:#f92672">,</span><span style="color:#66d9ef">new</span> Path<span style="color:#f92672">(</span>pathIn<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            FileOutputFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">setOutputPath</span><span style="color:#f92672">(</span>job<span style="color:#f92672">,</span><span style="color:#66d9ef">new</span> Path<span style="color:#f92672">(</span>pathOut<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            pathIn <span style="color:#f92672">=</span> pathOut<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            pathOut <span style="color:#f92672">=</span> pathOut <span style="color:#f92672">+</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">boolean</span> result <span style="color:#f92672">=</span> job<span style="color:#f92672">.</span><span style="color:#a6e22e">waitForCompletion</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>迭代三次后的输出内容如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>A    <span style="color:#ae81ff">0.12066667</span> B C D
+</span></span><span style="display:flex;"><span>B    <span style="color:#ae81ff">0.15711111</span> A D
+</span></span><span style="display:flex;"><span>C    <span style="color:#ae81ff">0.56511116</span> C
+</span></span><span style="display:flex;"><span>D    <span style="color:#ae81ff">0.15711111</span> B C
+</span></span></code></pre></div><h1 id="总结-总结总结"><a href="#%E6%80%BB%E7%BB%93" title="总结"></a>总结</h1>
+<h2 id="没有细说的两个问题-没有细说的两个问题没有细说的两个问题"><a href="#%E6%B2%A1%E6%9C%89%E7%BB%86%E8%AF%B4%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98" title="没有细说的两个问题"></a>没有细说的两个问题</h2>
+<p>PageRank算法还有一些值得探讨的问题，这里没记录，比如Rank leak和Rank sink问题。简单说明一下：</p>
+<ol>
+<li>Rank leak：一个独立的网页如果没有外出的链接就产生等级泄漏</li>
+</ol>
+<p>解决办法：</p>
+<ul>
+<li>将无出度的节点递归的从图中去掉，待其他节点计算完毕后再添加。</li>
+<li>对无出度的节点添加一条边，指向那些指向它的顶点。</li>
+</ul>
+<ol start="2">
+<li>Rank sink：整个网页图中的一组紧密链接成环的网页如果没有外出的链接就产生Rank sink。</li>
+</ol>
+<p>解决办法：</p>
+<ul>
+<li>引入随机浏览模型。</li>
+</ul>
+<h2 id="一个网页pr值的计算公式-一个网页pr值的计算公式一个网页pr值的计算公式"><a href="#%E4%B8%80%E4%B8%AA%E7%BD%91%E9%A1%B5PR%E5%80%BC%E7%9A%84%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F" title="一个网页PR值的计算公式"></a>一个网页PR值的计算公式</h2>
+<p><img src="https://i.loli.net/2020/05/28/DaGpOgI4CysfQZV.png" alt="Q.bmp"></p>
+<p>其中Mpi是所有对pi网页有出链的网页集合，L(pj)是网页pj的出链数目，N是网页总数，α一般取0.85。（上述代码里α取得是0.8，N为4）也就是这一行代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>pr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8f</span> <span style="color:#f92672">*</span> pr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0.2f</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.25f</span><span style="color:#f92672">;</span><span style="color:#75715e">//加入跳转因子，进行平滑处理。最后的0.25f其实是网页总数分之一
+</span></span></span></code></pre></div><h2 id="要注意的细节问题-要注意的细节问题要注意的细节问题"><a href="#%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%BB%86%E8%8A%82%E9%97%AE%E9%A2%98" title="要注意的细节问题"></a>要注意的细节问题</h2>
+<ul>
+<li>还是要对每一个阶段的KV值的设定格外注意。</li>
+<li>注意变量的作用域，设为全局变量还是局部变量，道理很简单，但马虎了，不容易查错。就因为这个问题，查了一个小时的错。本来应该是局部变量，结果大意了，设为了全局变量，搞混了几个变量的作用域，导致程序结果错误。</li>
+</ul>
+<h1 id="datadeduplication">DataDeduplication</h1>
+<blockquote>
+<p>数据去重就是去除重复数据的操作，较为简单。</p>
+</blockquote>
+<h1 id="输入文件格式-输入文件格式输入文件格式"><a href="#%E8%BE%93%E5%85%A5%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F" title="输入文件格式"></a>输入文件格式</h1>
+<p>算法的思路是个大方向，但具体的编码要具体分析，比如要考虑数据的格式。这里数据的格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#ae81ff">2019</span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> a
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2020</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> n
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span></code></pre></div><h1 id="算法-算法算法"><a href="#%E7%AE%97%E6%B3%95" title="算法"></a>算法</h1>
+<ul>
+<li>Map阶段：将key设为需要去重的数据，value设为空</li>
+<li>Reduce阶段：将得到的key继续复制为输出的key，value还是设为空</li>
+</ul>
+<h1 id="代码实现-代码实现代码实现"><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0" title="代码实现"></a>代码实现</h1>
+<h2 id="map-mapmap-1"><a href="#Map" title="Map"></a>Map</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.quchong<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.LongWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.NullWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Mapper<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyMapper</span> <span style="color:#66d9ef">extends</span> Mapper<span style="color:#f92672">&lt;</span>LongWritable<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>NullWritable<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Text keyInfo <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Text<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>LongWritable key<span style="color:#f92672">,</span> Text value<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        keyInfo <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>keyInfo<span style="color:#f92672">,</span> NullWritable<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="reduce-reducereduce-1"><a href="#Reduce" title="Reduce"></a>Reduce</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.quchong<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.NullWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Reducer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyReducer</span> <span style="color:#66d9ef">extends</span> Reducer<span style="color:#f92672">&lt;</span>Text<span style="color:#f92672">,</span> NullWritable<span style="color:#f92672">,</span>Text<span style="color:#f92672">,</span>NullWritable<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reduce</span><span style="color:#f92672">(</span>Text key<span style="color:#f92672">,</span> Iterable<span style="color:#f92672">&lt;</span>NullWritable<span style="color:#f92672">&gt;</span> values<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span>NullWritable<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="总结-总结总结-1"><a href="#%E6%80%BB%E7%BB%93" title="总结"></a>总结</h1>
+<p>数据去重算法本身较为简单，进一步体会MapReduce编程。</p>
+<h1 id="topn">TopN</h1>
+<blockquote>
+<p>TopN分析法是指从研究对象中按照某一个指标进行倒序或正序排列，取其中所需的N个数据，并对这N个数据进行重点分析的方法。</p>
+</blockquote>
+<h1 id="算法-算法算法-1"><a href="#%E7%AE%97%E6%B3%95" title="算法"></a>算法</h1>
+<p>输入数据格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#ae81ff">10</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">7</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">12</span> <span style="color:#ae81ff">23</span> <span style="color:#ae81ff">45</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">19</span> <span style="color:#ae81ff">28</span> <span style="color:#ae81ff">34</span>
+</span></span></code></pre></div><ul>
+<li>Map阶段：可以用TreeMap来保存TopN的数据。另外，以往的Mapper都是处理一行数据之后就用context.write()方法输出，而现在需要包所有数据保存在TreeMap后再写入，所以把context.write()方法放在cleanup()里执行。cleanup()方法就是整个MapTask执行完毕后才执行的一个方法。</li>
+<li>Reduce阶段：汇总数据，取TopN数据即可。</li>
+</ul>
+<h1 id="编程实现-编程实现编程实现-1"><a href="#%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0" title="编程实现"></a>编程实现</h1>
+<h2 id="map-mapmap-2"><a href="#Map" title="Map"></a>Map</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.topn<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.IntWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.LongWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.NullWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.Text<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Mapper<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.TreeMap<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TopnMapper</span> <span style="color:#66d9ef">extends</span> Mapper<span style="color:#f92672">&lt;</span>LongWritable<span style="color:#f92672">,</span> Text<span style="color:#f92672">,</span> NullWritable<span style="color:#f92672">,</span> IntWritable<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span>String<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>LongWritable key<span style="color:#f92672">,</span> Text value<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        String line <span style="color:#f92672">=</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> nums <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String num <span style="color:#f92672">:</span> nums<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>num<span style="color:#f92672">),</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()&gt;</span><span style="color:#ae81ff">5</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                map<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">firstKey</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">cleanup</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer i <span style="color:#f92672">:</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">()){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>NullWritable<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(),</span><span style="color:#66d9ef">new</span> IntWritable<span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="reduce-reducereduce-2"><a href="#Reduce" title="Reduce"></a>Reduce</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.gx.topn<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.IntWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.io.NullWritable<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.apache.hadoop.mapreduce.Reducer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.Comparator<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.TreeMap<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TopnReducer</span> <span style="color:#66d9ef">extends</span> Reducer<span style="color:#f92672">&lt;</span>NullWritable<span style="color:#f92672">,</span> IntWritable<span style="color:#f92672">,</span>NullWritable<span style="color:#f92672">,</span>IntWritable<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span>String<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;(</span><span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer a<span style="color:#f92672">,</span> Integer b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> b <span style="color:#f92672">-</span> a<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reduce</span><span style="color:#f92672">(</span>NullWritable key<span style="color:#f92672">,</span> Iterable<span style="color:#f92672">&lt;</span>IntWritable<span style="color:#f92672">&gt;</span> values<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>IntWritable value <span style="color:#f92672">:</span> values<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>value<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(),</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()&gt;</span><span style="color:#ae81ff">5</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                map<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">firstKey</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer i <span style="color:#f92672">:</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">()){</span>
+</span></span><span style="display:flex;"><span>            context<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>NullWritable<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(),</span><span style="color:#66d9ef">new</span> IntWritable<span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="总结-总结总结-2"><a href="#%E6%80%BB%E7%BB%93" title="总结"></a>总结</h1>
+<p>TopN算法本身不难，但可以将其作为一个模板，考虑对其进行改进。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+</div>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Open-Source | <a href="https://github.com/goodroot/hugo-classic">Github</a> | <a href="https://keybase.io/goodroot">Keybase</a>
+      
+    </footer>
+  </body>
+</html>
+

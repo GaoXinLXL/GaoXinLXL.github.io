@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>C on Classic</title>
-    <link>https://gaoxinlxl.github.io/tags/c/</link>
-    <description>Recent content in C on Classic</description>
+    <title>并行计算 on Classic</title>
+    <link>https://gaoxinlxl.github.io/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/</link>
+    <description>Recent content in 并行计算 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/c/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 21 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://gaoxinlxl.github.io/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MPI并行计算学习</title>
       <link>https://gaoxinlxl.github.io/post/2020/02/21/mpi%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97%E5%AD%A6%E4%B9%A0/</link>
@@ -23,15 +23,6 @@ mpiexec -n N ./xxxxxx
 MPI MPI是一个跨语言的通讯协议，用于编写并行计算机。
 6个基本函数 理论上讲 MPI 的所有通信功能都可以使用它的6个基本函数来实现。
 //初始化 MPI_Init(int *argc,char ***argv) //MPI 结束调用 MPI_Finalize(void) /* *获得进程的标识号 *保存在rank里 */ MPI_Comm_rank(MPI_Comm comm,int *rank) /* *获得当前通信域中进程的个数 *保存在size里 */ MPI_Comm_size(MPI_Comm comm,int *size) //发送消息 MPI_Send(Void *buf,int count,MPI_Datatype,int dest,int tag,MPI_Comm comm) //接受消息 MPI_Recv(void *buf,int count,MPI_Datatype data,int source,int tag,MPI_Comm comm,MPI_Status *status) 消息传递 MPI 通过 MPI_Send 和 MPI_Receive 发送和接受消息。其中这两种属于阻塞通信，对于发送方来说，消息发送不出去就会一直等待，而对于接收方来说，接收不到消息就会一直等待。</description>
-    </item>
-    
-    <item>
-      <title>利用数组建链表</title>
-      <link>https://gaoxinlxl.github.io/post/2018/04/19/%E5%88%A9%E7%94%A8%E6%95%B0%E7%BB%84%E5%BB%BA%E9%93%BE%E8%A1%A8/</link>
-      <pubDate>Thu, 19 Apr 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://gaoxinlxl.github.io/post/2018/04/19/%E5%88%A9%E7%94%A8%E6%95%B0%E7%BB%84%E5%BB%BA%E9%93%BE%E8%A1%A8/</guid>
-      <description>#include&amp;lt;stdio.h&amp;gt; #include&amp;lt;stdlib.h&amp;gt;//这句写上，因为结点空间申请函数malloc()要用此 typedef struct Node{//链表结点定义 int data;//放数据信息 struct Node *next;//指向后继结点的指针 }Node; Node *head(int a[]){//此方法利用数组建链表（尾插法） ，并返回头指针L Node *L, *current,*p;//L是头指针，current是当前结点指针，p是每次新申请结点的指针 L = (Node*)malloc(sizeof(Node));//先给头结点申请个空间 current = L; L-&amp;gt;next = NULL; int i=0; while(a[i]!=&amp;#39;\0&amp;#39;){//只要没将数组元素读完，就继续循环 p = (Node*)malloc(sizeof(Node));//每次读一个数组中的数，都要申请一个节点空间 p-&amp;gt;data = a[i];//将读到的数组中的数字赋给刚申请结点的数据域 current-&amp;gt;next = p; current = p; ++i; } current-&amp;gt;next = NULL; return L; } int main(void){ int x[1024]={1,2,3,6,6,6};//随便建个数组 Node *L,*p; L = head(x);//用数组中的元素建链表，并得到链表头指针 p = L-&amp;gt;next;//从开始结点的信息开始打印 while(p!=NULL){//验证一下打印出来的数是不是数组中的数 printf(&amp;#34;%d\n&amp;#34;,p-&amp;gt;data); p = p-&amp;gt;next; } return 0; } 运行效果如下：</description>
     </item>
     
   </channel>
